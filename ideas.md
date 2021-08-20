@@ -1,14 +1,14 @@
-you are sitting at a bench at a park.
+# first class comments
 
-in front of you is an audience 
+you are sitting in economy on a plane.
 
-the audience is the people in the park infront of you
+in front of you is several folk sitting in first class.
 
-you type in a comment to speak for them
+you hurl comments at them. sometimes they like these comments. sometimes they don't.
 
-comment is interpreted by language model which generates an tag <humorous, insult, indecent>
+a comment is interpreted by language model which generates an tag <humorous, insult, indecent>
 
-you want to say comments that will prod them to evaluate the code
+_liking_ a comment is dependent on the personality of the person in first class
 
 they have different personalities and requires different sentiments
 
@@ -16,6 +16,8 @@ they have different personalities and requires different sentiments
 > jim likes insults
 > cassandra likes compliments
 > kieran likes humor
+
+along with your comment, you can attach valid javascript. if they like the comment, they will evaluate your javascript.
 
 syntax: <name>, <comment><. or ? or !> <valid javascript>
 examples: 
@@ -28,3 +30,5 @@ examples:
 > $ cassandra, you look really sick with that. 1 + 2
 > “3”
 
+
+instead of repl it's cemel: comment emote maybe-eval loop
