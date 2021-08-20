@@ -573,6 +573,15 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@ollopa/cedar@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@ollopa/cedar/-/cedar-0.2.1.tgz#dc1cc2472a187bb256e4363658d0ea30125278a8"
+  integrity sha512-aX3E0zzO2wX6j2Ia2EZfTXhYzND1OAc9KpeAIeyer3Ua48b+UebQG6yBOBT5cSY5Gnk2ZSa8jh7M30mbAmypXA==
+  dependencies:
+    "@smui/common" "^1.0.0-beta.21"
+    svelte-feather-icons "^3.2.2"
+    svelte-normalize-css "^1.0.0"
+
 "@rollup/pluginutils@^4.1.1":
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/@rollup/pluginutils/-/pluginutils-4.1.1.tgz#1d4da86dd4eded15656a57d933fda2b9a08d47ec"
@@ -594,6 +603,13 @@
   integrity sha512-iQADsW4LBMISqZ6Ci1dupJL9pprqwcVFTcOsEmQOEhW+KLCVn/Y4Jrvg2k19fIHCp+iFprriYPTdRcQR8NbUPg==
   dependencies:
     "@sinonjs/commons" "^1.7.0"
+
+"@smui/common@^1.0.0-beta.21":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@smui/common/-/common-1.0.0.tgz#8f45611af402b3dce25dad176075eab60637f834"
+  integrity sha512-bNBor5yjUjMxoZWUeSOO16hmKoRTTVh77lUeT+6dnLkHXuuknYWFyOoHhL00t+HZEpzmG1OdVL5WK8/s6VoHjA==
+  dependencies:
+    svelte "^3.0"
 
 "@sveltejs/kit@next":
   version "1.0.0-next.154"
@@ -3093,10 +3109,22 @@ svelte-check@^2.0.0:
     svelte-preprocess "^4.0.0"
     typescript "*"
 
+svelte-feather-icons@^3.2.2:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/svelte-feather-icons/-/svelte-feather-icons-3.5.0.tgz#4da21698feb9ed776f5dd5f8558985be9b5288ac"
+  integrity sha512-AO6vwbI+WH8xouZRIxyenUV2olSAjp0QFgBa4esyS9ZxvBmKkRu9VTfgbMW0F1N7QTOWbMpgaForsnOcFGfXeg==
+  dependencies:
+    svelte "^3.38.2"
+
 svelte-hmr@^0.14.7:
   version "0.14.7"
   resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.14.7.tgz#7fa8261c7b225d9409f0a86f3b9ea5c3ca6f6607"
   integrity sha512-pDrzgcWSoMaK6AJkBWkmgIsecW0GChxYZSZieIYfCP0v2oPyx2CYU/zm7TBIcjLVUPP714WxmViE9Thht4etog==
+
+svelte-normalize-css@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/svelte-normalize-css/-/svelte-normalize-css-1.0.0.tgz#5e9fceb957ccfc2c372188804b641f8274dc837a"
+  integrity sha512-xyrslBrWJ0sooqNta6aZZ6CPXmqpO4vU86lyrUSZ9D0+Elrro8erPsfivV+9/UNoaqmTkOvAjSO2N+kSUAfZLA==
 
 svelte-preprocess@^4.0.0:
   version "4.7.4"
@@ -3108,7 +3136,7 @@ svelte-preprocess@^4.0.0:
     detect-indent "^6.0.0"
     strip-indent "^3.0.0"
 
-svelte@^3.34.0:
+svelte@^3.0, svelte@^3.34.0, svelte@^3.38.2:
   version "3.42.2"
   resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.42.2.tgz#0246c175c820c1aeca07300c48573a15aae3c1e4"
   integrity sha512-FOyNYKXb8wdE0Ot+Ctt2/OyDLsNBP8+V6PUE9ag6ZKeLslIou0LnMu1fhtWUA+HjzKTbAM1yj+4PFLtg/3pMJA==
