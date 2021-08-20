@@ -32,3 +32,8 @@ examples:
 
 
 instead of repl it's cemel: comment emote maybe-eval loop
+
+
+### name ideas
+
+- literally illiterate 
