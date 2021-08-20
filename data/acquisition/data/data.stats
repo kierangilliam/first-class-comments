@@ -1,0 +1,8 @@
+compliments : 383
+question : 400
+joke : 387
+hacker : 400
+total: 1570
+train: 1256
+test: 157
+validation: 157
