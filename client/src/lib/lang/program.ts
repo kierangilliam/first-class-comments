@@ -15,12 +15,13 @@ export const runProgram = async (input: string, testSentiments?: Either<Sentimen
 	if (responseError.isSome) 
 		return handlePoorResponse(responseError.unwrap)
 	
-	try {
-		const evaluation = evaluate(parseResult.unwrap)
-		return evaluation
-	} catch (e) {
-		return `Evaluation failed : ${e.message}`
+	const evaluation = evaluate(parseResult.unwrap)
+	if (evaluation.isRight) {
+		console.error(evaluation.right)
+		return `Evaluation failed : ${evaluation.right.type}`
 	}
+
+	return evaluation.left
 }
 
 const handleParseFailure = (e: Error, input: string, rest: string) => {

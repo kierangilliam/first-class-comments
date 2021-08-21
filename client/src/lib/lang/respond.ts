@@ -100,6 +100,12 @@ const getComments = (ast: ExpressionAST): Comment[] => {
 			]
 		case 'literal':
 			return [ast.comment]
+		case 'comparison':
+			return [
+				ast.comment, 
+				...getComments(ast.left),
+				...getComments(ast.right),
+			]
 		default:
 			throw new Error(`get comments: unimplemented :: ${ast.type}`)
 	}

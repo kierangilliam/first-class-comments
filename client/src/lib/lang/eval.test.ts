@@ -11,7 +11,7 @@ describe('if _ else _', () => {
 			alternative: lit('true', com('kanye', 'you are quite beautiful.')),
 		})
 
-		assertEq(result, '2')
+		assertEq(result.left, '2')
 	})
 
 	test('alternative', () => {
@@ -23,6 +23,6 @@ describe('if _ else _', () => {
 			alternative: lit('true', com('kanye', 'you are quite beautiful.')),
 		})
 
-		assertEq(result, 'true')
+		assertEq(result.left, 'true')
 	})
 })

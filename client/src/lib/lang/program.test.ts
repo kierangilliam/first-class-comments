@@ -23,19 +23,23 @@ describe('if _ else _', () => {
 		assertEq(result, 'true')
 	})
 	
-	// test('complex', async () => {
-	// 	const result = await runProgram(`
-	// 		socrates, why not? "if _ else _"
-	// 			| kanye, you are beautiful. "false"
-	// 			| kanye, everyone loves you. "2"    
-	// 			| kanye, you are quite beautiful. "true"
-	// 	`, [
-	// 		Left('question'),
-	// 		Left('compliment'),
-	// 		Left('compliment'),
-	// 		Left('compliment'),
-	// 	])
+	test('nesting', async () => {
+		const result = await runProgram(`
+			socrates, why not? "if _ else _"
+				| tina, some joke. "<="
+					| kanye, compliment a. "100"    
+					| kanye, compliment b. "200"
+				| kanye, compliment c. "2"    
+				| kanye, compliment d. "true"
+		`, [
+			Left('question'),
+			Left('joke'),
+			Left('compliment'), // a
+			Left('compliment'), // b
+			Left('compliment'), // c
+			Left('compliment'), // d
+		])
 	
-	// 	assertEq(result, 'true')
-	// })
+		assertEq(result, '2')
+	})
 })
