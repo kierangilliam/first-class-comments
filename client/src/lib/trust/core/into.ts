@@ -1,4 +1,5 @@
-import { ConstructorOf, getStructName, GLOBALS, ImplStructNotFoundError } from './globals'
+import type { ConstructorOf } from './globals'
+import { getStructName, GLOBALS, ImplStructNotFoundError } from './globals'
 import { Err, Result } from './result'
 
 export function implInto<

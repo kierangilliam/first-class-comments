@@ -1,5 +1,7 @@
-import { Constructor, getStructName, GLOBALS, ImplStructNotFoundError } from './globals'
-import { Err, Res, Result } from './result'
+import type { Constructor } from './globals'
+import { getStructName, GLOBALS, ImplStructNotFoundError } from './globals'
+import type { Res } from './result'
+import { Err, Result } from './result'
 import { range } from './utils'
 
 export function implFmt<T extends Constructor, INSTANTIATED>(format: (t: INSTANTIATED) => string) {
