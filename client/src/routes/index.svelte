@@ -7,15 +7,14 @@
 </script>
 
 <script lang="ts">
-	import { CMEL } from '$lib/CMEL'
+	import { startProgram } from '$lib/lang'
 	import Terminal from '$lib/components/Terminal.svelte';
 	import { writable } from 'svelte/store'
 
 	// TODO enable decorators
-
 	
 	const input = writable<string>(null)
-	const program = CMEL(input)	
+	const program = startProgram(input)	
 
 	const setInput = (e: { detail: string }) => {
 		input.set(e.detail)
