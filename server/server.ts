@@ -2,14 +2,21 @@ import { oakCors } from "https://deno.land/x/cors@v1.2.2/mod.ts";
 import type { RouterContext } from 'https://deno.land/x/oak@v8.0.0/mod.ts';
 import { Application, Router } from 'https://deno.land/x/oak@v8.0.0/mod.ts';
 
+const dev = Deno.env.get('MODE') === 'dev'
+
 const getEnv = async () => {
-    if (Deno.env.get('MODE') === 'dev') {
+    const defaultEnv = {
+        HuggingFaceAPI: 'https://api-inference.huggingface.co/models/Kieran/distilbert-base-uncased-finetuned-cola'
+    }
+
+    if (dev) {
         console.log('Loading .env file...')
         const dotenv = await import('https://deno.land/x/dotenv@v1.0.1/mod.ts')
-        return dotenv.config()
+        return { ...defaultEnv, ...dotenv.config() }
     }
 
     return {
+        ...defaultEnv,
         HuggingFaceKey: Deno.env.get('HuggingFaceKey') ?? '',
         HuggingFaceAPI: Deno.env.get('HuggingFaceAPI') ?? '',
     }
@@ -17,17 +24,14 @@ const getEnv = async () => {
 
 // Copy pasted from data/acquisition/get-and-format-data.js
 const labelMap = { compliment: 0, question: 1, joke: 2, hacker: 3, insult: 4, sad_quote: 5 }
+
 // Invert label map
 const LABEL_MAP: Record<number, string> = Object.entries(labelMap)
     .reduce((acc, curr) => ({ ...acc, [curr[1]]: curr[0] }), {})
 
 const PORT = 8999
 const router = new Router()
-const { HuggingFaceKey, HuggingFaceAPI }: Record<string, string> = 
-    { 
-        HuggingFaceAPI: 'https://api-inference.huggingface.co/models/Kieran/distilbert-base-uncased-finetuned-cola',
-        ...(await getEnv()),
-    }
+const { HuggingFaceKey, HuggingFaceAPI }: Record<string, string> = await getEnv()
 
 if (!HuggingFaceKey) throw new Error('Set HuggingFaceKey in .env file')
 
@@ -100,8 +104,10 @@ router
     })
 		
 const app = new Application()
-// Allow cors
-app.use(oakCors({ origin: "*" }))
+
+app.use(oakCors({ 
+    origin: dev ? '*' : 'https://first-class-comment.netlify.app/'
+}))
 app.use(router.routes())
 app.use(router.allowedMethods())
 
