@@ -10,4 +10,4 @@ refreshToken='test'
 ```
 
 
-run `node reddit-data.js`
+run `node get-and-format-data.js`
