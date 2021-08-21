@@ -11,8 +11,7 @@ const getEnv = async () => {
 
     return {
         HuggingFaceKey: Deno.env.get('HuggingFaceKey') ?? '',
-        HuggingFaceAPI: Deno.env.get('HuggingFaceAPI') 
-            ?? 'https://api-inference.huggingface.co/models/Kieran/distilbert-base-uncased-finetuned-cola',
+        HuggingFaceAPI: Deno.env.get('HuggingFaceAPI') ?? '',
     }
 }
 
@@ -24,7 +23,11 @@ const LABEL_MAP: Record<number, string> = Object.entries(labelMap)
 
 const PORT = 8999
 const router = new Router()
-const { HuggingFaceKey, HuggingFaceAPI }: Record<string, string> = await getEnv()
+const { HuggingFaceKey, HuggingFaceAPI }: Record<string, string> = 
+    { 
+        HuggingFaceAPI: 'https://api-inference.huggingface.co/models/Kieran/distilbert-base-uncased-finetuned-cola',
+        ...(await getEnv()),
+    }
 
 if (!HuggingFaceKey) throw new Error('Set HuggingFaceKey in .env file')
 

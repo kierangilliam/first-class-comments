@@ -15,7 +15,9 @@
 	const program = startProgram(input)	
 
 	const setInput = (e: { detail: string }) => {
-		input.set(e.detail)
+		// Force update even if last input === e.detail
+		$input = ''
+		$input = e.detail
 	}
 </script>
 
