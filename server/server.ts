@@ -88,9 +88,12 @@ router
 		
 const app = new Application()
 
-app.use(oakCors({ 
-    origin: dev ? '*' : 'https://first-class-comment.netlify.app/'
-}))
+app.use(
+    oakCors({ 
+        // origin: dev ? '*' : 'https://first-class-comment.netlify.app/'
+        origin: '*'
+    })
+)
 app.use(router.routes())
 app.use(router.allowedMethods())
 
