@@ -69,14 +69,16 @@ async function getCompliments() {
 async function main() {
 	const categorySize = 400
 	const trainSize = .80
-	const labelMap = { compliments: 0, question: 1, joke: 2, hacker: 3, }
+	const labelMap = { compliment: 0, question: 1, joke: 2, hacker: 3, }
 	
-	const compliments = await getCompliments()
+	const compliment = await getCompliments()
 	const question = await getQuestions(categorySize)
 	const hacker = await getHacker(categorySize)
 	const joke = await getJokes(categorySize)
+	// TODO sad
+	// TODO insult
 
-	const results = { compliments, question, joke, hacker }		
+	const results = { compliment, question, joke, hacker }		
 	
 	assert(Object.keys(results).join() == Object.keys(labelMap).join())
 
