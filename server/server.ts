@@ -1,7 +1,19 @@
 import { oakCors } from "https://deno.land/x/cors@v1.2.2/mod.ts";
-import { config } from 'https://deno.land/x/dotenv@v1.0.1/mod.ts';
 import type { RouterContext } from 'https://deno.land/x/oak@v8.0.0/mod.ts';
 import { Application, Router } from 'https://deno.land/x/oak@v8.0.0/mod.ts';
+
+const getEnv = async () => {
+    if (Deno.env.get('MODE') === 'DEV') {
+        const dotenv = await import('https://deno.land/x/dotenv@v1.0.1/mod.ts')
+        return dotenv.config()
+    }
+
+    return {
+        HuggingFaceKey: Deno.env.get('HuggingFaceKey') ?? '',
+        HuggingFaceAPI: Deno.env.get('HuggingFaceAPI') 
+            ?? 'https://api-inference.huggingface.co/models/Kieran/distilbert-base-uncased-finetuned-cola',
+    }
+}
 
 // Copy pasted from data/acquisition/get-and-format-data.js
 const labelMap = { compliment: 0, question: 1, joke: 2, hacker: 3, insult: 4, sad_quote: 5 }
@@ -11,11 +23,7 @@ const LABEL_MAP: Record<number, string> = Object.entries(labelMap)
 
 const PORT = 8999
 const router = new Router()
-const { HuggingFaceKey, HuggingFaceAPI }: Record<string, string> = {
-    // you can override this by setting it as an env var
-    HuggingFaceAPI: 'https://api-inference.huggingface.co/models/Kieran/distilbert-base-uncased-finetuned-cola',
-    ...config()
-}
+const { HuggingFaceKey, HuggingFaceAPI }: Record<string, string> = await getEnv()
 
 if (!HuggingFaceKey) throw new Error('Set HuggingFaceKey in .env file')
 
