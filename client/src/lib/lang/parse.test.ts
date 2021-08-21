@@ -1,24 +1,10 @@
 import type { ParseResult } from '$lib/lang/parse';
 import { parser } from '$lib/lang/parse';
 import { Ok } from '$lib/trust';
-import assert from 'assert';
-import type { Comment, ExpressionAST } from './types';
+import { assertEq, com, lit } from './test-utilts';
 
-const assertEq = (a: ParseResult, b: ParseResult) => {
-	assert.deepStrictEqual(a, b)
-}
-
-const assertError = (a: ParseResult, message: string) => {
-	assert.equal(a[0].error.message, message)
-}
-
-const com = (to: string, comment: string): Comment => ({ to, comment })
-
-const lit = (value: string, comment: Comment): ExpressionAST => ({
-	type: 'literal',
-	value,
-	comment,
-})
+export const assertError = (a: ParseResult, message: string): void => 
+	assertEq(a[0].error.message, message)
 
 describe('if _ else _', () => {
 	test('basic', () => {

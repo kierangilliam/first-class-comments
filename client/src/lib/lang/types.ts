@@ -18,3 +18,30 @@ export type ProgramState = {
 
 // TODO remove js payload
 export type Comment = { to: Citizen, comment: string, js_payload?: string }
+
+export type ExpressionAST = {
+	type: 'if' | 'literal' | 'comparison' | 'operator'
+	comment: Comment
+} & ({
+	type: 'if',
+	condition: ExpressionAST,
+	consequence: ExpressionAST,
+	alternative: ExpressionAST
+} | {
+	// kanye
+	type: 'literal'
+	value: string
+} | {
+	// linus
+	// infix only
+	type: 'operator'
+	operator: '+' | '-' | '/' | '*'
+	left: ExpressionAST
+	right: ExpressionAST
+} | {
+	// tina fey
+	type: 'comparison'	
+	operator: '<=' | '>=' | '<' | '>' | '||' | '&&'
+	left: ExpressionAST
+	right: ExpressionAST
+})
