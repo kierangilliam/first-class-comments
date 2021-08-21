@@ -11,8 +11,6 @@
 	import Terminal from '$lib/components/Terminal.svelte';
 	import { writable } from 'svelte/store'
 
-	// TODO enable decorators
-	
 	const input = writable<string>(null)
 	const program = startProgram(input)	
 
