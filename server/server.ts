@@ -1,24 +1,10 @@
 import { oakCors } from "https://deno.land/x/cors@v1.2.2/mod.ts";
 import type { RouterContext } from 'https://deno.land/x/oak@v8.0.0/mod.ts';
 import { Application, Router } from 'https://deno.land/x/oak@v8.0.0/mod.ts';
+import { dev, getEnv } from './env.ts'
 
-const dev = Deno.env.get('MODE') === 'dev'
-
-const getEnv = async () => {
-    const defaultEnv = {
-        HuggingFaceAPI: 'https://api-inference.huggingface.co/models/Kieran/distilbert-base-uncased-finetuned-cola'
-    }
-
-    if (dev) {
-        console.log('Loading .env file...')
-        const dotenv = await import('https://deno.land/x/dotenv@v1.0.1/mod.ts')
-        return { ...defaultEnv, ...dotenv.config() }
-    }
-
-    return {
-        ...defaultEnv,
-        HuggingFaceKey: Deno.env.get('HuggingFaceKey') ?? '',
-    }
+const log = (...items: any) => {
+    console.log(`[${new Date().toLocaleString()}]`, ...items)
 }
 
 // Copy pasted from data/acquisition/get-and-format-data.js
@@ -42,11 +28,10 @@ const errorOut = (ctx: RouterContext, message: string, status=400) => {
 router
     .get('/', (ctx) => { ctx.response.body = 'healthy' })
     .post('/inference', async (ctx) => { 
-        // const params = helpers.getQuery(ctx, { mergeParams: true })
         const body = await ctx.request.body().value
         const { comment } = JSON.parse(body)
 
-        console.log(comment)
+        log(comment)
 
         if (!comment) 
             return errorOut(ctx, 'add comment to body')
@@ -54,7 +39,8 @@ router
         if (comment.length > 100) 
             return errorOut(ctx, 'comment length cannot exceed length 100')
 
-        console.log('... Inferring')
+        log('... Inferring')
+
         const start = Date.now()
 
         const response = await fetch(HuggingFaceAPI, {
@@ -66,19 +52,17 @@ router
         if (response.status !== 200) {
             const error = await response.json()
 
-            console.dir(error)
-
             if (error?.error?.includes('is currently loading')) {
                 const time = error['estimated_time']
-                console.log('HuggingFace.loading', time)
+                log('HuggingFace.loading', time)
                 return errorOut(ctx, `HuggingFace.loading.${time}`)
             }
 
-            console.log(`${comment} unknown error ${error}`)
+            log(`"${comment}" unknown error ${error}`)
             return errorOut(ctx, `HuggingFace.unknown`)
         }            
 
-        console.log(`${comment} :: took ${((Date.now() - start) / 1000).toFixed(2)} seconds`)
+        log(`"${comment}" took ${((Date.now() - start) / 1000).toFixed(2)} seconds`)
 
         type HFResult = {score: number, label: string}        
 
