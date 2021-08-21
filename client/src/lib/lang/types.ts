@@ -24,7 +24,7 @@ export type ProgramState = {
 export type Comment = { to: Citizen, comment: string, js_payload?: string }
 
 export type MathOperator = '+' | '-' | '/' | '*'
-export type ComparisonOperator = '<' | '>' | '<=' | '>=' | '||' | '&&'
+export type ComparisonOperator = '<' | '>' | '<=' | '>=' | 'or' | 'and'
 
 export type ExpressionAST = {
 	type: 'if' | 'literal' | 'comparison' | 'operator'
