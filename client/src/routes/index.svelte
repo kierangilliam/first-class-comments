@@ -1,12 +1,12 @@
 <svelte:head>
-	<title>Home</title>
+	<title>First Class Comments</title>
 </svelte:head>
 
-<script context="module" lang="ts">
+<script context='module' lang='ts'>
 	export const ssr = false;
 </script>
 
-<script lang="ts">
+<script lang='ts'>
 	import { startProgram } from '$lib/lang'
 	import Terminal from '$lib/components/Terminal.svelte';
 	import { writable } from 'svelte/store'
@@ -28,6 +28,8 @@
 {#each Object.entries($program.world.citizens) as [name, state]}
 	<p><strong>{name}</strong> is {state.type}</p>
 {/each}
+
+<a href='https://github.com/kierangilliam/first-class-comments'>Project Link</a>
 
 <style>
 	section {
