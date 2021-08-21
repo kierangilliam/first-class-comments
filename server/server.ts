@@ -51,8 +51,11 @@ router
         if (response.status !== 200) {
             const error = await response.json()
 
+            console.dir(error)
+
             if (error?.error?.includes('is currently loading')) {
                 const time = error['estimated_time']
+                console.log('HuggingFace.loading', time)
                 return errorOut(ctx, `HuggingFace.loading.${time}`)
             }
 

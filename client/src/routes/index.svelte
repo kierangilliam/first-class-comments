@@ -3,7 +3,7 @@
 </svelte:head>
 
 <script context="module" lang="ts">
-	export const prerender = true;
+	export const ssr = false;
 </script>
 
 <script lang="ts">
@@ -24,6 +24,10 @@
 </section>
 
 <Terminal on:input={setInput} {program} />
+
+{#each Object.entries($program.world.citizens) as [name, state]}
+	<p><strong>{name}</strong> is {state.type}</p>
+{/each}
 
 <style>
 	section {

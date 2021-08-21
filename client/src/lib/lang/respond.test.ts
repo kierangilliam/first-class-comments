@@ -1,10 +1,11 @@
 import { Left, Right } from '$lib/trust/core/either'
+import { DefaultWorld } from './constants'
 import { respond } from './respond'
 import { assertEq, com, lit } from './test-utilts'
 
 describe('if _ else _', () => {
 	test('a okay', async () => {
-		const result = await respond({
+		const result = await respond(DefaultWorld, {
 			type: 'if',
 			comment: com('socrates', 'why not?'),
 			condition: lit('true', com('kanye', 'you are beautiful.')),
@@ -26,7 +27,7 @@ describe('if _ else _', () => {
 		const c1 = com('kanye', 'you are beautiful.')
 		const c2 = com('kanye', 'everyone loves you.')
 
-		const result = await respond({
+		const result = await respond(DefaultWorld, {
 			type: 'if',
 			comment: com('socrates', 'why not?'),
 			condition: lit('true', c1),

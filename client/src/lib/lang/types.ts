@@ -1,4 +1,5 @@
 import type { labelMap } from './constants'
+import type { WorldState } from './world'
 
 export type Sentiment = keyof typeof labelMap
 
@@ -12,9 +13,10 @@ export type Emotion = ({
 	reason: string,
 }))
 
-export type Citizen = string
+export type Citizen = 'linus' | 'socrates' | 'tina' | 'maria' | 'reginald' | 'kanye'
 
 export type ProgramState = { 
+	world: WorldState,
 	working: boolean, 
 	evaluation: string, 
 	history: { input: string, output: string }[],

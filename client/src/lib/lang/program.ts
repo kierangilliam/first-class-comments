@@ -5,13 +5,18 @@ import parse from './parse'
 import type { RespondError } from './respond'
 import { respond } from './respond'
 import type { Sentiment } from './types'
+import type { WorldState } from './world'
 
-export const runProgram = async (input: string, testSentiments?: Either<Sentiment, RespondError>[]): Promise<string> => {
+interface ProgramPatches {
+	sentiments?: Either<Sentiment, RespondError>[]
+}
+
+export const runProgram = async (input: string, state: WorldState, patch?: ProgramPatches): Promise<string> => {
 	const [parseResult, rest] = parse(input)
 	if (parseResult.error) 			
 		return handleParseFailure(parseResult.error, input, rest)
 
-	const responseError = await respond(parseResult.unwrap, testSentiments)
+	const responseError = await respond(state, parseResult.unwrap, patch?.sentiments)
 	if (responseError.isSome) 
 		return handlePoorResponse(responseError.unwrap)
 	
@@ -41,6 +46,9 @@ const handlePoorResponse = (e: RespondError): string => {
 				'looked confused by your comment',
 			])
 		}
+
+		case 'recipient is asleep':
+			return `${e.to} is asleep.`
 
 		case 'network error':
 			return 'Network error. Try again soon.'

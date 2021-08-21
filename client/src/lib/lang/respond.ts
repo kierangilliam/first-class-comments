@@ -1,6 +1,7 @@
 import { Either, Left, Option, Right } from '$lib/trust';
 import { firstClassCitizens, labelMap } from './constants';
 import type { Citizen, Comment, ExpressionAST, Sentiment } from './types';
+import type { WorldState } from './world';
 
 export type RespondError = ({
 	type: 'network error' 
@@ -15,6 +16,9 @@ export type RespondError = ({
 	type: 'inference engine is loading'
 	comment: Comment
 	timeLeft: string
+} | {
+	type: 'recipient is asleep'
+	to: Citizen
 })
 
 const API = 'http://localhost:8999/emote'
@@ -22,7 +26,9 @@ const API = 'http://localhost:8999/emote'
 // walks the ast to see how citizens respond to comments
 // if they all respond okay, return None (yeah thats confusing, should fix)
 // else, return reason 
-export const respond = async (ast: ExpressionAST, testSentiments?: Either<Sentiment, RespondError>[]): Promise<Option<RespondError>> => {
+export const respond = async (
+	world: WorldState, ast: ExpressionAST, testSentiments?: Either<Sentiment, RespondError>[]
+): Promise<Option<RespondError>> => {
 
 	const commentsQueue = getComments(ast)
 	
@@ -41,7 +47,14 @@ export const respond = async (ast: ExpressionAST, testSentiments?: Either<Sentim
 		if (sentiment.isRight) 
 			return Option.Some(sentiment.right)
 
-		if (!recipientRespondsWellToComment( sentiment.left, comment.to)) 
+		const response = recipientResponse(world, sentiment.left, comment.to)
+		
+		if (response.isRight)
+			return Option.Some(response.right)
+
+		const respondedWell = response.left
+
+		if (respondedWell == false) 
 			return Option.Some({ 
 				type: 'recipient does not respond well', 
 				comment, 
@@ -111,6 +124,11 @@ const getComments = (ast: ExpressionAST): Comment[] => {
 	}
 }
 
-const recipientRespondsWellToComment = (sentiment: Sentiment, to: Citizen): boolean => {
-	return firstClassCitizens[sentiment] === to
+const recipientResponse = (world: WorldState, sentiment: Sentiment, to: Citizen): Either<boolean, RespondError> => {
+	const state = world.citizens[to]
+
+	if (state.type === 'sleeping')
+		return Right({ type: 'recipient is asleep', to, sentiment })
+
+	return Left(firstClassCitizens[sentiment] === to)
 }

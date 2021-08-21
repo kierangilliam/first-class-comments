@@ -1,6 +1,7 @@
 import type { Res } from '$lib/trust';
 import { Err, ExpectError, Ok, Option } from '$lib/trust';
-import type { Comment, ComparisonOperator, ExpressionAST } from './types';
+import { citizens } from './constants';
+import type { Citizen, Comment, ComparisonOperator, ExpressionAST } from './types';
 
 // expression ast, rest of input
 export type ParseResult = [Res<ExpressionAST>, string]
@@ -24,7 +25,15 @@ const parseStatement = (input: string): Res<{ comment: Comment, toParse: string 
 
 	const [_, to, comment, toParse] = matches.map(x => x.trim())
 
-	return Ok({ comment: { to, comment }, toParse })
+	const isCitizen = (x: string): x is Citizen => 
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		citizens.includes(x)
+
+	if (isCitizen(to)) 
+		return Ok({ toParse, comment: { to, comment }, })
+
+	return Err(`${to}'s name is not recognized`)
 }
 
 const parse = (input: string): ParseResult => {

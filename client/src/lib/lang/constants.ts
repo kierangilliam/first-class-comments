@@ -1,7 +1,10 @@
 import type { Citizen } from './types'
+import type { WorldState } from './world'
 
 // copy pasted from /data/acquisition/get-and-format-data
 export const labelMap = { compliment: 0, question: 1, joke: 2, hacker: 3, insult: 4, sad_quote: 5 }
+
+export const citizens: Citizen[] = ['linus', 'socrates', 'tina', 'maria', 'reginald', 'kanye']
 
 export const firstClassCitizens: Record<keyof typeof labelMap, Citizen> = {
 	hacker: 'linus',
@@ -10,4 +13,18 @@ export const firstClassCitizens: Record<keyof typeof labelMap, Citizen> = {
 	sad_quote: 'maria',
 	insult: 'reginald',
 	compliment: 'kanye',
+}
+
+const DefaultState: { type: 'idle' } = { type: 'idle' }
+
+export const DefaultWorld: WorldState = {
+	totalEvents: 0,
+	citizens: {
+		linus: DefaultState,
+		socrates: DefaultState,
+		tina: DefaultState,
+		maria: DefaultState,
+		reginald: DefaultState,
+		kanye: DefaultState,
+	}
 }
