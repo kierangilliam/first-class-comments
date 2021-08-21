@@ -23,6 +23,9 @@ export type ProgramState = {
 // TODO remove js payload
 export type Comment = { to: Citizen, comment: string, js_payload?: string }
 
+export type MathOperator = '+' | '-' | '/' | '*'
+export type ComparisonOperator = '<' | '>' | '<=' | '>=' | '||' | '&&'
+
 export type ExpressionAST = {
 	type: 'if' | 'literal' | 'comparison' | 'operator'
 	comment: Comment
@@ -45,7 +48,7 @@ export type ExpressionAST = {
 } | {
 	// tina fey
 	type: 'comparison'	
-	operator: '<=' | '>=' | '<' | '>' | '||' | '&&'
+	operator: ComparisonOperator
 	left: ExpressionAST
 	right: ExpressionAST
 })
