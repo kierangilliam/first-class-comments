@@ -1,3 +1,7 @@
+import type { labelMap } from './constants'
+
+export type Sentiment = keyof typeof labelMap
+
 export type Emotion = ({
 	type: 'ok' | 'err',	
 } & ({

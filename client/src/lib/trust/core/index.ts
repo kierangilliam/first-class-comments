@@ -2,6 +2,7 @@ import { implInto } from './into'
 import { Option } from './option'
 import { Result } from './result'
 
+export * from './either'
 export * from './fmt'
 export { struct } from './globals'
 export * from './into'

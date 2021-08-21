@@ -16,7 +16,7 @@ socrates, what is the best drive-through chicken? "let best = 'raising canes'; b
 
 maria, you will die soon. "'false'"
 
-kaufman, want to hear a dirty joke? the clean horse fell in a dirty puddle "'lmao'"
+tina, want to hear a dirty joke? the clean horse fell in a dirty puddle "'lmao'"
 
 linus, Google's Secret Initiative – Project Hug "3"
 linus, Patterns in Confusing Explanations  "2"

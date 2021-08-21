@@ -51,6 +51,9 @@ kanye (compliments) is literal ('string' 32 true false)
 socrates conditionally accepts (if else)
 tina (jokes) makes comparisons (< > <= >= && ||)
 
+x (likes when y is mad) calls functions
+maria (sad quote) plans for the eventual (creates functions)
+
 # unused: maria (sad quote), jerry (conspiracy theorist)
 | maria, love is not real. only death is certain. ?
 | maria, death is upon us. ?
