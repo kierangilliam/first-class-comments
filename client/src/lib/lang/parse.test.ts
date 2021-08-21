@@ -2,6 +2,7 @@ import type { ParseResult } from '$lib/lang/parse';
 import { parser } from '$lib/lang/parse';
 import { Ok } from '$lib/trust';
 import assert from 'assert';
+import type { Comment, ExpressionAST } from './types';
 
 const assertEq = (a: ParseResult, b: ParseResult) => {
 	assert.deepStrictEqual(a, b)
@@ -10,6 +11,14 @@ const assertEq = (a: ParseResult, b: ParseResult) => {
 const assertError = (a: ParseResult, message: string) => {
 	assert.equal(a[0].error.message, message)
 }
+
+const com = (to: string, comment: string): Comment => ({ to, comment })
+
+const lit = (value: string, comment: Comment): ExpressionAST => ({
+	type: 'literal',
+	value,
+	comment,
+})
 
 describe('if _ else _', () => {
 	test('basic', () => {
@@ -22,25 +31,10 @@ describe('if _ else _', () => {
 	
 		assertEq(result, [Ok({
 			type: 'if',
-			comment: {
-				to: 'socrates',
-				comment: 'why not?',
-			},
-			condition: {
-				comment: { to: 'kanye', comment: 'you are beautiful.', },
-				type: 'literal',
-				literal: 'false',
-			},
-			consequence: {
-				comment: { to: 'kanye', comment: 'everyone loves you.', },
-				type: 'literal',
-				literal: '2',
-			},
-			alternative: {
-				comment: { to: 'kanye', comment: 'you are quite beautiful.', },
-				type: 'literal',
-				literal: 'true',
-			}
+			comment: com('socrates', 'why not?'),
+			condition: lit('false', com('kanye', 'you are beautiful.')),
+			consequence: lit('2', com('kanye', 'everyone loves you.')),
+			alternative: lit('true', com('kanye', 'you are quite beautiful.')),
 		}) , ''])
 	})
 	
