@@ -6,12 +6,19 @@ const assert = require('assert');
 // const fetch = require('node-fetch');
 require('dotenv').config()
 
+const labelMap = { compliment: 0, question: 1, joke: 2, hacker: 3, insult: 4, sad_quote: 5 }
+
 const { userAgent, clientId, clientSecret, refreshToken, accessToken } = process.env
 const r = new snoowrap({ userAgent, clientId, clientSecret, refreshToken, accessToken })
 
 r.config({ debug: true })
 
 const removeTabNewlines = str => str.replace(/\n/g, ' ').replace(/\t/, ' ')
+
+const fromFile = async (filename) => {
+	const data = await readFile(filename, 'utf8')
+	return data.split('\n')
+}
 
 const getBody = post => post.selftext
 const getTitle = post => post.title
@@ -62,23 +69,33 @@ async function getCompliments() {
 	// }
 	// printMantelligence().then(console.log)
 
-	const data = await readFile('./data/compliments', 'utf8')
-	return data.split('\n')
+	return fromFile('./data/compliments')
+}
+
+async function getInsults() {
+	return fromFile('./data/insults')
+}
+
+async function getSadQuotes() {
+	return fromFile('./data/sad')
 }
 
 async function main() {
-	const categorySize = 400
-	const trainSize = .80
-	const labelMap = { compliment: 0, question: 1, joke: 2, hacker: 3, }
+	const categorySize = 600
+	const trainSize = .80	
 	
-	const compliment = await getCompliments()
-	const question = await getQuestions(categorySize)
-	const hacker = await getHacker(categorySize)
-	const joke = await getJokes(categorySize)
-	// TODO sad
-	// TODO insult
+	// TODO history fact
+	const [compliment, question, hacker, joke, insult, sad_quote] = await Promise.all([
+		getCompliments(),
+		getQuestions(categorySize),
+		getHacker(categorySize),
+		// TODO use https://pun.me/funny/
+		getJokes(categorySize),
+		getInsults(),
+		getSadQuotes(),
+	])
 
-	const results = { compliment, question, joke, hacker }		
+	const results = { compliment, question, joke, hacker, insult, sad_quote }		
 	
 	assert(Object.keys(results).join() == Object.keys(labelMap).join())
 
@@ -126,7 +143,6 @@ async function main() {
 
 	console.log(results)
 	console.log(stats)
-	console.log({ trainEnd, mid })
 
 	fs.writeFileSync('./data/train.json', train.join('\n'))	
 	fs.writeFileSync('./data/test.json', test.join('\n'))	

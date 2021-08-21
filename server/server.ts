@@ -1,10 +1,10 @@
-import { Application, Router } from 'https://deno.land/x/oak@v8.0.0/mod.ts'
 import { oakCors } from "https://deno.land/x/cors@v1.2.2/mod.ts";
 import { config } from 'https://deno.land/x/dotenv@v1.0.1/mod.ts';
-import type { RouterContext } from 'https://deno.land/x/oak@v8.0.0/mod.ts'
+import type { RouterContext } from 'https://deno.land/x/oak@v8.0.0/mod.ts';
+import { Application, Router } from 'https://deno.land/x/oak@v8.0.0/mod.ts';
 
 // Copy pasted from reddit-data.js
-const labelMap = { compliment: 0, question: 1, joke: 2, hacker: 3, }
+const labelMap = { compliment: 0, question: 1, joke: 2, hacker: 3, insult: 4, sad_quote: 5 }
 // Invert label map
 const LABEL_MAP: Record<number, string> = Object.entries(labelMap)
     .reduce((acc, curr) => ({ ...acc, [curr[1]]: curr[0] }), {})

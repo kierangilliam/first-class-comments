@@ -1,8 +1,10 @@
-compliments : 383
-question : 400
-joke : 387
-hacker : 400
-total: 1570
-train: 1256
-test: 157
-validation: 157
+compliment : 383
+question : 600
+joke : 474
+hacker : 600
+insult : 158
+sad_quote : 259
+total: 2474
+train: 1979
+test: 247
+validation: 248
