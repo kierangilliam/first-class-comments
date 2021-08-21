@@ -7,31 +7,39 @@
 </script>
 
 <script lang="ts">
-	let comment: string
-	let response: string 
+	import { CMEL } from '$lib/CMEL'
+	import { onMount } from 'svelte'
+	import { writable } from 'svelte/store'
 
-	const submit = async () => {
-		const res = await fetch('http://localhost:8999/emote', { 
-			method: 'post',
-			body: JSON.stringify({ comment }),
-		})
+	// TODO enable decorators
 
-		response = await res.text()
+	let textInput: string
+	const input = writable<string>(null)
+	const program = CMEL(input)	
 
-		console.log(res)
-	}	
+	const onTerminalKeyUp = (e: KeyboardEvent) => {
+		if (e.key === 'Enter') {
+			input.set(textInput)
+		}
+	}
 </script>
 
 <section>
 	<h1>yeet</h1>
-
-	<input bind:value={comment} type="text">
-	<button on:click={submit}>submit</button>
 </section>
 
-<section>
-	{response}
-</section>
+<div class='terminal' on:keyup={onTerminalKeyUp}>
+	{#each $program.history as { input, output } }
+		<p>> {input}</p>
+		<p>{output}</p>
+	{/each}
+
+	{#if $program.working}
+		<p>...</p>
+	{:else}
+		<input bind:value={textInput} type="text">
+	{/if}
+</div>
 
 <style>
 	section {

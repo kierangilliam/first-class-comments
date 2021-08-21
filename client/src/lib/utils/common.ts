@@ -1,3 +1,5 @@
+export const choice = <T>(arr: T[]): T => 
+	arr[Math.floor(Math.random() * arr.length)]
 
 export const dedupe = <T>(array: T[]): T[] => {
 	return [...new Set(array)]
