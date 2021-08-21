@@ -18,7 +18,6 @@ const getEnv = async () => {
     return {
         ...defaultEnv,
         HuggingFaceKey: Deno.env.get('HuggingFaceKey') ?? '',
-        HuggingFaceAPI: Deno.env.get('HuggingFaceAPI') ?? '',
     }
 }
 
