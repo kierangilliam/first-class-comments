@@ -37,3 +37,44 @@ instead of repl it's cemel: comment emote maybe-eval loop
 ### name ideas
 
 - literally illiterate 
+
+
+
+
+
+# lang
+each citizen can only deal with a subset of the language
+
+linus (hackernews) operates (+ / -)
+reginald (insult) is unpredictable (Math.random()) 
+kanye (compliments) is literal ('string' 32 true false)
+socrates conditionally accepts (if else)
+tina (jokes) makes comparisons (< > <= >= && ||)
+
+# unused: maria (sad quote), jerry (conspiracy theorist)
+| maria, love is not real. only death is certain. ?
+| maria, death is upon us. ?
+| maria, death is upon us. ?
+
+piping
+`
+socrates, why not? "if _ else _"
+	| kanye, you are beautiful. "false"
+		| kanye, your shirt is soo cool. "2"
+    | linus, Citation File Format "_ && _"
+  		| tina, Amy Poehler and I have been friends for so long, we’re like Oprah and Gale. Only we’re not denying anything. "_ < _"
+			| reginald, i hope you die.
+  			| kanye, your shirt is soo cool. "42"
+  		| kanye, i love your eyes. "false"
+	"
+`
+
+turns into
+`
+if (false) { 2 }
+else { random() < 42 && false }
+`
+
+
+misc
+- using the same comments over and over decreasing the chance the citizen will care

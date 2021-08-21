@@ -16,4 +16,5 @@ export type ProgramState = {
 	history: { input: string, output: string }[],
 }
 
-export type Comment = { to: Citizen, comment: string, js_payload: string }
+// TODO remove js payload
+export type Comment = { to: Citizen, comment: string, js_payload?: string }

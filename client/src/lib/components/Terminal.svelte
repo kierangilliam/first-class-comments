@@ -1,8 +1,8 @@
 <script lang='ts'>
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher } from 'svelte'
 	import { writable } from 'svelte/store'
 	import type { Readable } from 'svelte/store'
-	import type { ProgramState } from '$lib/CMEL'
+	import type { ProgramState } from '$lib/lang'
 	import { blink, clickOutside } from '$lib/actions'
 
 	export let program: Readable<ProgramState>

@@ -27,6 +27,8 @@ export class Option<T> {
 		}
 	}
 
+	get isSome(): boolean { return !this._none }
+
 	get isNone(): boolean { return this._none }
 
 	get unwrap(): T { 
