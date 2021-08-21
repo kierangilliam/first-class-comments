@@ -52,20 +52,26 @@ describe('if _ else _', () => {
 		})
 	})
 	
-	// test('nesting', () => {
-	// 	const result = parse(`
-	// 		socrates, why not? "if _ else _"
-	// 			| tina, some joke. ">="
-	// 			| kanye, everyone loves you. "2"    
-	// 			| kanye, you are quite beautiful. "true"
-	// 	`)
+	test('nesting', () => {
+		const result = parse(`
+			socrates, why not? "if _ else _"
+				| tina, some joke. ">="
+					| kanye, compliment a. "100"    
+					| kanye, compliment b. "200"
+				| kanye, compliment c. "2"    
+				| kanye, compliment d. "true"
+		`)
 	
-	// 	assertParse(result, {
-	// 		type: 'if',
-	// 		comment: com('socrates', 'why not?'),
-	// 		condition: lit('false', com('kanye', 'you are beautiful.')),
-	// 		consequence: lit('2', com('kanye', 'everyone loves you.')),
-	// 		alternative: lit('true', com('kanye', 'you are quite beautiful.')),
-	// 	})
-	// })	
+		assertParse(result, {
+			type: 'if',
+			comment: com('socrates', 'why not?'),
+			condition: comp('>=',
+				lit('100', com('kanye', 'compliment a.')),
+				lit('200', com('kanye', 'compliment b.')),
+				com('tina', 'some joke.'),
+			),
+			consequence: lit('2', com('kanye', 'compliment c.')),
+			alternative: lit('true', com('kanye', 'compliment d.')),
+		})
+	})	
 })
