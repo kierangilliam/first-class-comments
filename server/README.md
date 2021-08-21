@@ -1,1 +1,1 @@
-`deno run --allow-net --allow-read server.ts`
+`MODE=dev && deno run --allow-net --allow-read --allow-env server.ts`

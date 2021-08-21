@@ -3,7 +3,8 @@ import type { RouterContext } from 'https://deno.land/x/oak@v8.0.0/mod.ts';
 import { Application, Router } from 'https://deno.land/x/oak@v8.0.0/mod.ts';
 
 const getEnv = async () => {
-    if (Deno.env.get('MODE') === 'DEV') {
+    if (Deno.env.get('MODE') === 'dev') {
+        console.log('Loading .env file...')
         const dotenv = await import('https://deno.land/x/dotenv@v1.0.1/mod.ts')
         return dotenv.config()
     }
@@ -34,7 +35,7 @@ const errorOut = (ctx: RouterContext, message: string, status=400) => {
 
 router
     .get('/', (ctx) => { ctx.response.body = 'healthy' })
-    .post('/emote', async (ctx) => { 
+    .post('/inference', async (ctx) => { 
         // const params = helpers.getQuery(ctx, { mergeParams: true })
         const body = await ctx.request.body().value
         const { comment } = JSON.parse(body)
