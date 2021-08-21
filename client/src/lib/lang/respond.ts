@@ -1,5 +1,5 @@
 import { Either, Left, Option, Right } from '$lib/trust';
-import { firstClassCitizens, labelMap } from './constants';
+import { API, firstClassCitizens, labelMap } from './constants';
 import type { Citizen, Comment, ExpressionAST, Sentiment } from './types';
 import type { WorldState } from './world';
 
@@ -20,8 +20,6 @@ export type RespondError = ({
 	type: 'recipient is asleep'
 	to: Citizen
 })
-
-const API = 'http://localhost:8999/emote'
 
 // walks the ast to see how citizens respond to comments
 // if they all respond okay, return None (yeah thats confusing, should fix)
@@ -71,7 +69,7 @@ const getSentiment = async (comment: Comment): Promise<Either<Sentiment, Respond
 	let res: Response
 
 	try {
-		res = await fetch(API, { 
+		res = await fetch(`${API}/inference`, { 
 			method: 'post',
 			body: JSON.stringify({ comment: comment.comment }),
 		})
