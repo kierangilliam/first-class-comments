@@ -1,17 +1,6 @@
-import { choice } from "$lib/utils";
-import type { Citizen, Comment, Emotion } from "./types";
-
-// copy pasted from /data/acquisition/get-and-format-data
-const labelMap = { compliment: 0, question: 1, joke: 2, hacker: 3, insult: 4, sad_quote: 5 }
-
-const firstClassCitizens: Record<keyof typeof labelMap, Citizen> = {
-	hacker: 'linus',
-	question: 'socrates',
-	joke: 'kaufman',
-	sad_quote: 'maria',
-	insult: 'reginald',
-	compliment: 'kanye',
-}
+import { choice } from '$lib/utils';
+import { firstClassCitizens } from './constants';
+import type { Comment, Emotion } from './types';
 
 /**
 TODO the following were being miscategorized. 

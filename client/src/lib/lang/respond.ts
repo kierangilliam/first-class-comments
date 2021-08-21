@@ -2,14 +2,20 @@ import { Either, Left, Option, Right } from '$lib/trust';
 import { firstClassCitizens, labelMap } from './constants';
 import type { Citizen, Comment, ExpressionAST, Sentiment } from './types';
 
-export type RespondError = {
+export type RespondError = ({
 	type: 'network error' 
-		| 'api: unknown error'
+	comment: Comment
+} | {
+	type: 'api: unknown error'
 		| 'client is unaware of sentiment'
 		| 'recipient does not respond well'
-	comment: Comment
 	sentiment: string
-}
+	comment: Comment
+} | {
+	type: 'inference engine is loading'
+	comment: Comment
+	timeLeft: string
+})
 
 const API = 'http://localhost:8999/emote'
 
@@ -46,6 +52,8 @@ export const respond = async (ast: ExpressionAST, testSentiments?: Either<Sentim
 	return Option.None
 }
 
+// calls api to get the label for comment
+// fixme: sentiment may not be the best word to describe this
 const getSentiment = async (comment: Comment): Promise<Either<Sentiment, RespondError>> => {
 	let res: Response
 
@@ -56,12 +64,17 @@ const getSentiment = async (comment: Comment): Promise<Either<Sentiment, Respond
 		})
 	} catch (e) {
 		console.error(e)
-		return Right({ type: 'network error', comment, sentiment: 'NONE' })
+		return Right({ type: 'network error', comment })
 	}
 
 	const sentiment = await res.text()
 
 	if (res.status !== 200) {
+		if (sentiment.includes('HuggingFace.loading.')) {
+			const timeLeft = sentiment.split('HuggingFace.loading.')[1]
+			return Right({ type: 'inference engine is loading', comment, timeLeft })	
+		}
+
 		console.error({ comment, text: sentiment })
 		return Right({ type: 'api: unknown error', comment, sentiment })
 	}

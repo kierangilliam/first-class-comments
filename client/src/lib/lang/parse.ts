@@ -32,7 +32,7 @@ const parseStatement = (input: string): Res<{ comment: Comment, toParse: string 
 	return Ok({ comment: { to, comment }, toParse })
 }
 
-export const parser = (input: string): ParseResult => {
+export const parse = (input: string): ParseResult => {
 	const [first, ...restPieces] = input.replace(/(\t|\n)/g, '').split('|')
 	const rest = restPieces.join(' | ')
 
@@ -76,11 +76,11 @@ socrates, why not? "if _ else _"
 	| kanye, you are beautiful. "false"   < followed by alternative  (any exp)
  */
 const parseIf = (comment: Comment, nestedInput: string): ExpRes<'if'> => {
-	const [cond, rest1] = parser(nestedInput)
+	const [cond, rest1] = parse(nestedInput)
 	const condition = cond.expect('condition')
-	const [cons, rest2] = parser(rest1)
+	const [cons, rest2] = parse(rest1)
 	const consequence = cons.expect('consequence')
-	const [alt, rest] = parser(rest2)
+	const [alt, rest] = parse(rest2)
 	const alternative = alt.expect('alternative')
 
 	console.debug('if _ else _', {condition, consequence, alternative})
@@ -94,4 +94,4 @@ const parseIf = (comment: Comment, nestedInput: string): ExpRes<'if'> => {
 	}), rest]
 }
 
-export default parseStatement
+export default parse

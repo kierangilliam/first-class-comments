@@ -1,7 +1,6 @@
 import type { Readable } from 'svelte/store'
 import { get, writable } from 'svelte/store'
-import maybeEmote from './maybe-emote'
-import parse from './parse'
+import { runProgram } from './program'
 import type { ProgramState } from './types'
 
 export type { Comment, ProgramState } from './types'
@@ -21,18 +20,9 @@ export const startProgram = (input: Readable<string>): Readable<ProgramState> =>
 
 		store.update(store => ({ ...store, working: true }))
 
-		const comment = parse($input)
-
-		if (comment.error) 			
-			return done(comment.error.message)
-
-		const result = await maybeEmote(comment.unwrap)
-
-		if (result.type === 'err') 
-			done(result.reason)
-		else 
-			done(result.evaluation)
+		done(await runProgram($input))	
 	})
 
 	return store
 }
+

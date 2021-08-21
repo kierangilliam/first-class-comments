@@ -1,5 +1,5 @@
 import type { ParseResult } from '$lib/lang/parse';
-import { parser } from '$lib/lang/parse';
+import { parse } from '$lib/lang/parse';
 import { Ok } from '$lib/trust';
 import { assertEq, com, lit } from './test-utilts';
 
@@ -8,7 +8,7 @@ export const assertError = (a: ParseResult, message: string): void =>
 
 describe('if _ else _', () => {
 	test('basic', () => {
-		const result = parser(`
+		const result = parse(`
 			socrates, why not? "if _ else _"
 				| kanye, you are beautiful. "false"
 				| kanye, everyone loves you. "2"    
@@ -25,7 +25,7 @@ describe('if _ else _', () => {
 	})
 	
 	test('parse failure :: no condition', () => {
-		const result = parser('socrates, why not? "if _ else _"')
+		const result = parse('socrates, why not? "if _ else _"')
 		assertError(result, "Expected 'condition'")
 	})
 })
