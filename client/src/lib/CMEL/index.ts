@@ -16,7 +16,7 @@ type Emotion = ({
 	reason: string,
 }))
 
-type ProgramState = { 
+export type ProgramState = { 
 	working: boolean, 
 	evaluation: string, 
 	history: { input: string, output: string }[],
@@ -81,11 +81,11 @@ const maybeEmote = async ({ comment, js_payload, to }: Comment): Promise<Emotion
 jerry "you suck" 1 + 3
  */
 const parseInput = (input: string): Res<Comment> => {
-	const matches = /^(\w+)\s*"(.*)"\s*(.*)$/g.exec(input.trim())
+	const matches = /^(\w+)\s*,\s*"(.*)"\s*(.*)$/g.exec(input.trim())
 
 	console.log(input.trim(), matches)
 	if (matches?.length != 4) {
-		return Err(`Bad input. Syntax: <citizen's name> "<your comment>" <js code>`)
+		return Err(`Bad input. Syntax: <citizen's name>, "<your comment>" <js code>`)
 	}		
 
 	const [_, to, comment, js_payload] = matches
