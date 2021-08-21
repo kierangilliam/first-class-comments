@@ -3,7 +3,7 @@ import { config } from 'https://deno.land/x/dotenv@v1.0.1/mod.ts';
 import type { RouterContext } from 'https://deno.land/x/oak@v8.0.0/mod.ts';
 import { Application, Router } from 'https://deno.land/x/oak@v8.0.0/mod.ts';
 
-// Copy pasted from reddit-data.js
+// Copy pasted from data/acquisition/get-and-format-data.js
 const labelMap = { compliment: 0, question: 1, joke: 2, hacker: 3, insult: 4, sad_quote: 5 }
 // Invert label map
 const LABEL_MAP: Record<number, string> = Object.entries(labelMap)
@@ -48,12 +48,21 @@ router
             headers: { Authorization: HuggingFaceKey }
         })
 
+        if (response.status !== 200) {
+            const error = await response.json()
+
+            if (error?.error?.includes('is currently loading')) {
+                const time = error['estimated_time']
+                return errorOut(ctx, `HuggingFace.loading.${time}`)
+            }
+
+            console.log(`${comment} unknown error ${error}`)
+            return errorOut(ctx, `HuggingFace.unknown`)
+        }            
+
         console.log(`${comment} :: took ${((Date.now() - start) / 1000).toFixed(2)} seconds`)
 
-        type HFResult = {score: number, label: string}
-
-        if (response.status !== 200) 
-            return errorOut(ctx, `Hugging Face replied with :: ${await response.text()}`)
+        type HFResult = {score: number, label: string}        
 
         const json = await response.json()
         const predictions: HFResult[] = json[0] ?? json[0][0]
