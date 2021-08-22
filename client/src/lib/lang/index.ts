@@ -11,6 +11,8 @@ export type { Comment, ProgramState } from './types'
 export const startProgram = (
 	input: Readable<string>, ctx: Pick<ProgramCtx, 'inferenceEndpoint'>
 ): Readable<ProgramState> => {
+	let inferenceEngine: 'always-accept' | 'language-model' = 'language-model'
+
 	const store = writable<ProgramState>({ 
 		world: DefaultWorld, 
 		working: false, 
@@ -47,11 +49,24 @@ export const startProgram = (
 			working: false, 
 			history: [...get(store).history, { input: $input, output }],
 			evaluation: output,
-		})		
+		})	
+		
+		if ($input.startsWith('set-engine=')) {
+			const [_, engine] = $input.split('set-engine=')
+			if (engine === 'language-model') {
+				inferenceEngine = engine	
+				return done('set to language model')
+			} else if (engine === 'always-accept') {
+				inferenceEngine = engine
+				return done('set to always accept comment')
+			} else {
+				return done(`invalid engine ${engine}, try 'language-model' or 'always-correct'`)
+			}
+		}
 
 		store.update(store => ({ ...store, working: true }))
 
-		done(await runProgram({ ...ctx, world: get(store).world }, $input))	
+		done(await runProgram({ ...ctx, inferenceEngine, world: get(store).world }, $input))	
 	})
 
 	return store

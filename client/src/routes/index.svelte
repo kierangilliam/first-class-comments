@@ -1,5 +1,5 @@
 <svelte:head>
-	<title>First Class Comments</title>
+	<title>literally illiterate</title>
 </svelte:head>
 
 <script context='module' lang='ts'>
@@ -7,7 +7,6 @@
 </script>
 
 <script lang='ts'>
-	import { fly } from 'svelte/transition'
 	import { writable } from 'svelte/store'
 	import { dev } from '$app/env'
 	import { startProgram } from '$lib/lang'
@@ -21,7 +20,7 @@
 	const inferenceEndpoint = dev
 		? 'http://localhost:8999/inference'
 		: 'https://first-class-comments.deno.dev/inference'
-
+	
 	const input = writable<string>(null)
 	const showHelp = persistent('show-help', true)
 	$: program = $showHelp ? null : startProgram(input, { inferenceEndpoint })	
@@ -31,12 +30,14 @@
 	}
 
 	const setInput = (e: { detail: string }) => {
-		if (e.detail === 'help') {
+		const i = e.detail.trim()
+
+		if (i === 'help') {
 			$showHelp = true
 		} else {
 			// Force update even if last input === e.detail
 			$input = ''
-			$input = e.detail		
+			$input = i
 		}
 	}
 	

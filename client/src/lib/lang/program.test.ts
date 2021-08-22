@@ -2,14 +2,26 @@ import { Left } from '$lib/trust';
 import { DefaultWorld } from './constants';
 import { runProgram } from './program';
 import { assertEq } from './test-utilts';
-import type { MathOperator } from './types';
+import type { MathOperator, ProgramCtx } from './types';
 import { updateCitizen } from './world';
+
+const ctx: ProgramCtx = { world: DefaultWorld, inferenceEndpoint: '', inferenceEngine: 'language-model' }
+
+test('ownership', async () => {
+	const result = await runProgram(ctx,
+		'tina, setup? punchline! "3"', 		
+		{
+			sentiments: [Left('joke')]
+		}
+	)
+
+	assertEq(result, 'tina does not own construct "literal"')
+})
 
 describe('if else', () => {
 
 	test('simple', async () => {
-		const result = await runProgram(
-			{ world: DefaultWorld, inferenceEndpoint: '' },
+		const result = await runProgram(ctx,
 			`
 			socrates, why not? "if else"
 				| kanye, you are beautiful. "false"
@@ -29,25 +41,8 @@ describe('if else', () => {
 		assertEq(result, 'true')
 	})
 	
-	test('ownership', async () => {
-		const result = await runProgram(
-			{ world: DefaultWorld, inferenceEndpoint: '' },
-			`
-			tina, setup? punchline! "3"
-			`, 		
-			{
-				sentiments: [
-					Left('joke'),
-				]
-			}
-		)
-	
-		assertEq(result, 'tina does not own construct "literal"')
-	})
-	
 	test('invalid syntax - expects consequence', async () => {
-		const result = await runProgram(
-			{ world: DefaultWorld, inferenceEndpoint: '' },
+		const result = await runProgram(ctx,
 			`
 			socrates, why not? "if else"
 				| tina, setup? punchline! "and"
@@ -65,8 +60,7 @@ describe('if else', () => {
 	})
 	
 	test('nesting', async () => {
-		const result = await runProgram(
-			{ world: DefaultWorld, inferenceEndpoint: '' },
+		const result = await runProgram(ctx,
 			`
 			socrates, why not? "if else"
 				| tina, some joke. "<="
@@ -91,8 +85,7 @@ describe('if else', () => {
 	})	
 	
 	test('nesting a lot', async () => {
-		const result = await runProgram(
-			{ world: DefaultWorld, inferenceEndpoint: '' },
+		const result = await runProgram(ctx,
 			`
 			socrates, why not? "if else"
 				| tina, setup? punchline! "and"
@@ -137,8 +130,7 @@ describe('world', () => {
 	test('sleeping basic', async () => {
 		const world = updateCitizen(DefaultWorld, 'kanye', 'sleeping')
 
-		const result = await runProgram(
-			{ world, inferenceEndpoint: '' },
+		const result = await runProgram({ ...ctx, world },
 			'kanye, compliment a. "100"', 
 			{ sentiments: [Left('compliment')] },
 		)
@@ -149,7 +141,6 @@ describe('world', () => {
 
 describe('math', () => {
 	const ops: MathOperator[] = ['+', '-', '/', '*']
-	const ctx = { world: DefaultWorld, inferenceEndpoint: '' }
 
 	test('3, 4', async () => {
 		const expected = ['7', '-1', '0.75', '12']

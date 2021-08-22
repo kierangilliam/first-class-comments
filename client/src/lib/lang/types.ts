@@ -17,6 +17,7 @@ export type Citizen = 'linus' | 'socrates' | 'tina' | 'kanye'
 
 export type ProgramCtx = {
 	world: WorldState
+	inferenceEngine: 'language-model' | 'always-accept'
 	inferenceEndpoint: string
 }
 

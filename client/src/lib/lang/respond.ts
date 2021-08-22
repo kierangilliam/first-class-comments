@@ -49,6 +49,9 @@ export const respond = async (
 				construct: type,
 			})
 
+		if (ctx.inferenceEngine === 'always-accept')
+			break
+
 		const sentiment = testSentiments 
 			// ugly way to monkey patch for testing (see emote.test.ts)
 			? testSentiments[i]

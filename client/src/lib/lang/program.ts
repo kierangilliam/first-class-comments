@@ -61,14 +61,20 @@ const handleParseFailure = (e: Error, input: string, rest: string) => {
 	return 'parse failure: ' + e.message
 }
 
+let apiFails = 0
+
 const handlePoorResponse = (e: RespondError): string => {
+	const apiFailMsg = apiFails > 2
+		? '\nIf this error keeps occurring, you can set the inference engine to always accept your comments type:'
+			+ '\nset-engine=always-accept'
+		: ''
+
 	switch (e.type) {
-		case 'api: unknown error':
-			return 'The sentiment inference engine had an unknown error. Try again soon.'
-		
+		//////////////////////// CITIZEN RESPONSES
+		case 'recipient does not respond well':
+			return `${e.comment.to} did not like ${e.sentiment}.`
 		case 'recipient is does not own':
 			return `${e.comment.to} does not own construct "${e.construct}"`
-
 		case 'client is unaware of sentiment': {
 			return `${e.comment.to} ` + choice([
 				'shrugged you off',
@@ -76,18 +82,22 @@ const handlePoorResponse = (e: RespondError): string => {
 				'looked confused by your comment',
 			])
 		}
-
 		case 'recipient is asleep':
 			return `${e.to} is asleep.`
 
-		case 'network error':
-			return 'Network error. Try again soon.'
-		
-		case 'inference engine is loading':
-			return `inference engine is loading. may take up to ${e.timeLeft} seconds.`
-
-		case 'recipient does not respond well':
-			return `${e.comment.to} did not like ${e.sentiment}.`
+		//////////////////////// API FAILURE
+		case 'api: unknown error': {
+			apiFails++
+			return 'The sentiment inference engine had an unknown error. Try again soon.' + apiFailMsg
+		}
+		case 'network error': {
+			apiFails++
+			return 'Network error. Try again soon.' + apiFailMsg
+		}
+		case 'inference engine is loading': {
+			apiFails++
+			return `inference engine is loading. may take up to ${e.timeLeft} seconds.` + apiFailMsg
+		}		
 
 		default:
 			// 'type does not exist on type never'
