@@ -3,7 +3,7 @@
 	import { createEventDispatcher } from 'svelte'
 
 	const dispatch = createEventDispatcher()
-	const maxPages = 5
+	const maxPages = 8
 
 	let inputElement: HTMLInputElement
 	let terminalInput: string
@@ -87,30 +87,62 @@
 			<p>type <strong>next</strong> or <strong>n</strong> to continue to next page</p>
 			<p>type <strong>back</strong> or <strong>b</strong> to go back</p>
 			<p>type <strong>skip</strong> to bypass the quick intro</p>
-			<p>press control+enter or double click the screen to submit</p>
+			<p>press <strong>control+enter</strong> or <strong>double click</strong> the screen to submit</p>
 		{:else if page == 1}
-			<h2>First Class Comments</h2>
-			<p>A comment as a first class citizen to a language can mean many things</p>
-			<p>I chose to interpret it quite literally</p>
-			<p>
-				in <strong>literally illiterate</strong>, you submit comments to celebrities sitting in first class of an airplane
-			</p>
-			<p>if they <i>like</i> your comment, they will evaluate your code</p>
+			<h2>First-Class Comments</h2>
+			<p>A language with 'first-class comments' can mean many things.</p>
+			<p>I chose to interpret it quite literally.</p>
+			<p>In <strong>literally illiterate</strong>, you send comments to citizens sitting in first class of an airplane.</p>
+			<p>A comment is not a programming comment (like <strong>//</strong>), but rather a remark.</p>
+			<p>A valid comment would be, <strong>you dress well</strong>.</p>
 		{:else if page == 2}
 			<h2>Responding to Comments</h2>
-			<p>a celeb <i>likes</i> your comment if it fits with their personality</p>
+			<p>a citizen <i>likes</i> your comment if it fits with their personality</p>
 			<p><strong>kanye</strong>, for example, <i>likes</i> his ego being fed (compliments)</p>
-			<p>each celeb also owns a part of the language...</p>
 		{:else if page == 3}
-			<h2>Ownership</h2>
-			<p><strong>kanye</strong> owns <i>literals</i></p>
-			<p>a literal is </p>
-		{:else if page == 4}
 			<h2>Syntax</h2>
+			<p>to send someone a comment with some code, follow this syntax</p>
 			<p><strong>(name), (comment) "(code)"</strong></p>
+			<p>if a citizen accepts your comment, they will evaluate your code</p>
 			<p>to tell <strong>kanye</strong> he is beautiful, write</p>
 			<p><strong>kanye, you are beautiful "3"</strong></p>
-			<p>if <strong>kanye</strong> accepts your comment, he will evaluate your code</p>
+			<strong>3</strong> <span class='small'>{'< evaluation'}</span>
+		{:else if page == 4}
+			<h2>Citizens</h2>
+			<p>Citizens have likes...</p>
+			<span class='break'>
+				- kanye likes compliments
+				- linus likes to read hackernews headlines
+				- socrates likes questions
+				- tina likes a joke with a punchline
+			</span>
+			<p>... but also, each citizen 'owns' a facet of the language</p>			
+		{:else if page == 5}
+			<h2>Ownership</h2>		
+			<p>
+				not only do they have to like your comment,
+				you have to make sure your <strong>code</strong>'
+				type is owned by them
+			</p>
+			<span class='break'>
+				- kanye is literal (3 'text' true false)
+				- linus operates (+ - / *)
+				- tina does comparisons {'(and or > < <= >=)'}
+				- socrates decides (if else)
+			</span>	
+		{:else if page == 6}
+			<h2>Chaining</h2>
+			<p>to do math or an if/else, you must chain</p>
+			<p>chaining is too much to fit on this little screen</p>
+			<p>so refer to <a target='_blank' href="https://github.com/kierangilliam/first-class-comments#chaining">this</a></p>
+		{:else if page == 7}
+			<h2>Events</h2>
+			<p>oh yeah, and sometimes the citizens go to sleep</p>
+			<p>when they are sleeping, they won't evaluate your code</p>
+		{:else if page == 8}
+			<h2>Stuck?</h2>
+			<p>see the <a target='_blank' href='https://github.com/kierangilliam/first-class-comments'>repo</a></p>
+			<p>type <strong>man</strong> for manual</p>
 		{/if}
 	</div>
 
@@ -121,6 +153,11 @@
 		{:else if page == 2}
 			<p>pssst, you can also arrow right/left to go forward/backward</p>
 			<p>i just wanted you to get used to pressing control+enter</p>
+		{:else if page == 3}
+			<p>(once you exit the tutorial, you'll be able to send comments)</p>
+		{:else if page == maxPages}
+			<p>done. type <strong>exit</strong></p>
+			<p>comeback any time by typing <strong>help</strong></p>
 		{/if}
 
 		{#if error}
@@ -145,6 +182,10 @@
 		height: 100%;		
 	}
 
+	.break {
+		white-space: pre-line;
+	}
+
 	h2 {
 		text-transform: uppercase;
 		letter-spacing: .25ch;
@@ -160,7 +201,12 @@
 		font-size: var(--textSmall);
 	}
 
-	strong {
+	.small {
+		color: var(--gray);
+		font-size: .86rem;	
+	}
+
+	strong, lit {
 		color: var(--gold)
 	}
 

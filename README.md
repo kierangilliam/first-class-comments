@@ -63,7 +63,7 @@ Basic one-liner:
 
 `<citizen>, <comment> "<code>"`
 
-You can also chain statements together:
+You can also chain statements together to do math
 
 ```
 $ <citizen>, <comment> "+"
@@ -71,11 +71,44 @@ $ <citizen>, <comment> "+"
 	| <citizen>, <comment> "3"
 ```
 
+Or to do an `if else`
+
 ```
 $ <citizen>, <comment> "if else"
 	| <citizen>, <comment> "true"
 	| <citizen>, <comment> "5"
 	| <citizen>, <comment> "3"
+```
+
+The first item in an `if else` is the condition.
+The next is the result if the condition is true.
+Last is what gets executed if the condition is false.
+
+This can be more complex like so
+
+```
+$ <citizen>, <comment> "if else"
+	| <citizen>, <comment> "<"
+    	| <citizen>, <comment> "5"
+    	| <citizen>, <comment> "10"
+	| <citizen>, <comment> "*"
+    	| <citizen>, <comment> "2"
+    	| <citizen>, <comment> "2"
+	| <citizen>, <comment> "/"
+    	| <citizen>, <comment> "+"
+        	| <citizen>, <comment> "4"
+        	| <citizen>, <comment> "6"
+    	| <citizen>, <comment> "2"
+```
+
+If transpiled to javascript, this code would look like this
+
+```
+if (5 < 10) {
+	2 * 2
+} else {
+	(4 + 6) / 2
+}
 ```
 
 Both above expressions would result in 5.
