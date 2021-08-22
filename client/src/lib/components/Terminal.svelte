@@ -26,6 +26,11 @@
 		if (resetHistory) historyOffset = 0
 	}
 
+	const submitInput = () => {
+		dispatch('input', terminalInput)
+		terminalInput = ''
+	}
+
 	const onTerminalClick = () => {
 		$focused = true
 	}
@@ -64,8 +69,7 @@
 			}
 			case 'Enter': {
 				if (controlKeyPressed) {
-					dispatch('input', terminalInput)
-					terminalInput = ''
+					submitInput()
 					break;
 				}
 			}
@@ -82,6 +86,7 @@
 	on:click={onTerminalClick} 
 	on:keydown={onTerminalKeyDown}
 	on:keyup={onTerminalKeyUp}
+	on:dblclick={submitInput}
 	use:clickOutside={onClickOutside}
 >
 	{#each $program.history as { input, output } }

@@ -36,8 +36,9 @@
 	.screen:before {
       content : '';
       position : absolute;
-      width : 105%;
+      width : 110%;
 	  top: 0;
+	  left: calc(-1 * var(--s-6));
 	  height: 60px;
       background : #fff;
 	  --strength: .6;

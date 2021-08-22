@@ -5,10 +5,11 @@
 	const dispatch = createEventDispatcher()
 	const maxPages = 5
 
+	let inputElement: HTMLInputElement
 	let terminalInput: string
 	let controlKeyPressed = false
 	let error = null
-	let page = 2
+	let page = 0
 
 	const onTerminalKeyDown = (e: KeyboardEvent) => {
 		switch (e.key) {
@@ -69,6 +70,7 @@
 		}
 
 		terminalInput = ''
+		inputElement.focus()
 	}
 </script>
 
@@ -76,6 +78,7 @@
 	class='container' 
 	on:keydown={onTerminalKeyDown}
 	on:keyup={onTerminalKeyUp}
+	on:dblclick={handleTerminalInput}
 >
 	<div class="top">
 		{#if page == 0}
@@ -84,7 +87,7 @@
 			<p>type <strong>next</strong> or <strong>n</strong> to continue to next page</p>
 			<p>type <strong>back</strong> or <strong>b</strong> to go back</p>
 			<p>type <strong>skip</strong> to bypass the quick intro</p>
-			<p>then press control+enter to submit</p>
+			<p>press control+enter or double click the screen to submit</p>
 		{:else if page == 1}
 			<h2>First Class Comments</h2>
 			<p>A comment as a first class citizen to a language can mean many things</p>
@@ -128,7 +131,7 @@
 	
 		<div>
 			<span>$</span>
-			<input autofocus type='text' bind:value={terminalInput}>
+			<input autofocus type='text' bind:this={inputElement} bind:value={terminalInput}>
 		</div>
 	</div>
 </div>

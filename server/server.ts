@@ -1,14 +1,14 @@
 import { oakCors } from "https://deno.land/x/cors@v1.2.2/mod.ts";
 import type { RouterContext } from 'https://deno.land/x/oak@v8.0.0/mod.ts';
 import { Application, Router } from 'https://deno.land/x/oak@v8.0.0/mod.ts';
-import { dev, getEnv } from './env.ts'
+import { getEnv } from './env.ts';
 
 const log = (...items: any) => {
     console.log(`[${new Date().toLocaleString()}]`, ...items)
 }
 
 // Copy pasted from data/acquisition/get-and-format-data.js
-const labelMap = { compliment: 0, question: 1, joke: 2, hacker: 3, insult: 4, sad_quote: 5 }
+const labelMap = { compliment: 0, question: 1, joke: 2, hacker: 3 }
 
 // Invert label map
 const LABEL_MAP: Record<number, string> = Object.entries(labelMap)
