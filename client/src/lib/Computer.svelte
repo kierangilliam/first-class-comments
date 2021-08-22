@@ -9,7 +9,7 @@
 <style>
 	.container {
 		position: fixed;
-		bottom: -15%;
+		bottom: -13%;
 		left: 50vw;
 		z-index: var(--z-index);
 		transform: translateX(-50%);
@@ -17,18 +17,19 @@
 
 	.screen {
 		position: absolute;
-		top: 18%;
-		left: 18%;
-		width: 67%;
-		height: 50.5%;
+		top: 12.2%;
+		left: 16%;
+		width: 65%;
+		height: 57%;
 		mix-blend-mode: hard-light;
+		transform: skew(2deg, 0deg);
 	}
 
 	/* modified from https://blog.carbonfive.com/vintage-terminal-effect-in-css3/ */
 	.screen:before {
       content : '';
       position : absolute;
-      width : 100%;
+      width : 105%;
 	  top: 0;
 	  height: 60px;
       background : #fff;
@@ -51,12 +52,15 @@
 			opacity: 0;
 		}
 		5% { opacity: .1; }
-		100% { top: 100%;}
+		95% { opacity: .1; }
+		100% { 
+			top: 90%;
+			opacity: 0;
+		}
 	}
 
 	img {
-		--size: 950px;
-		width: var(--size);
-		height: var(--size);
+		width: 900px;
+		height: 800px;
 	}
 </style>

@@ -100,13 +100,8 @@ describe('math', () => {
 // TODO
 /**
 Now:
-plane with windows and names in windows
 plane on change do update for 1sec
-Terminal as computer
-	- also wrap lines on |
-plane with images
 mobile style
-[maybe] visual plane effects (flying)
 [maybe] in "<code>" you can write a comment that wakes someone up half the time
 collect more data
 

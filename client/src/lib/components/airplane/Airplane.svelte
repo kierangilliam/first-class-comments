@@ -10,6 +10,7 @@
 	onMount(() => {
 		const magnitude = 45
 		const slowdown = 1000
+		let fired = false
 
 		const animate = () => {
 			const t = Date.now() / slowdown
@@ -19,9 +20,13 @@
 			plane.style.top = (Math.sin(2 * t) / 2) * magnitude + 'px'
 		}
 		
-		setInterval(() => {
-			requestAnimationFrame(animate)
-		}, 150)
+		// in dev mode this will fire many times
+		if (!fired)
+			setInterval(() => {
+				requestAnimationFrame(animate)
+			}, 150)
+		
+		fired = true
 	})
 </script>
 
