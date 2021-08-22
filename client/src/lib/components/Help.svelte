@@ -90,19 +90,20 @@
 			<p>press <strong>control+enter</strong> or <strong>double click</strong> the screen to submit</p>
 		{:else if page == 1}
 			<h2>First-Class Comments</h2>
-			<p>A language with 'first-class comments' can mean many things.</p>
-			<p>I chose to interpret it quite literally.</p>
-			<p>In <strong>literally illiterate</strong>, you send comments to citizens sitting in first class of an airplane.</p>
-			<p>A comment is not a programming comment (like <strong>//</strong>), but rather a remark.</p>
-			<p>A valid comment would be, <strong>you dress well</strong>.</p>
+			<p>a language with 'first-class comments' can mean many things</p>
+			<p>i chose to interpret it quite literally</p>
+			<p>in <strong>literally illiterate</strong>, you send comments to citizens sitting in first class of an airplane</p>
+			<p>a comment is not a programming comment (like <strong>//</strong>), but rather a remark</p>
+			<p>a valid comment would be, <strong>you dress well</strong></p>
 		{:else if page == 2}
 			<h2>Responding to Comments</h2>
 			<p>a citizen <i>likes</i> your comment if it fits with their personality</p>
 			<p><strong>kanye</strong>, for example, <i>likes</i> his ego being fed (compliments)</p>
+			<p>if they like your comment, they will evaluate code that you give them</p>
 		{:else if page == 3}
 			<h2>Syntax</h2>
 			<p>to send someone a comment with some code, follow this syntax</p>
-			<p><strong>(name), (comment) "(code)"</strong></p>
+			<p><strong><lit>(name)</lit>, <lit>(comment)</lit> "<lit>(code)</lit>"</strong></p>
 			<p>if a citizen accepts your comment, they will evaluate your code</p>
 			<p>to tell <strong>kanye</strong> he is beautiful, write</p>
 			<p><strong>kanye, you are beautiful "3"</strong></p>
@@ -116,19 +117,20 @@
 				- socrates likes questions
 				- tina likes a joke with a punchline
 			</span>
-			<p>... but also, each citizen 'owns' a facet of the language</p>			
+			<p>... but also, each citizen <i>owns</i> a facet of the language</p>			
 		{:else if page == 5}
 			<h2>Ownership</h2>		
+			<p>not only do they have to like your comment...</p>
 			<p>
-				not only do they have to like your comment,
-				you have to make sure your <strong>code</strong>'
+				...you have to make sure your <strong>code</strong>'s
 				type is owned by them
 			</p>
+			<Spacer />
 			<span class='break'>
-				- kanye is literal (3 'text' true false)
-				- linus operates (+ - / *)
-				- tina does comparisons {'(and or > < <= >=)'}
-				- socrates decides (if else)
+				- kanye is literal <lit>3</lit>, <lit>'text'</lit>, <lit>true</lit>, <lit>false</lit>
+				- linus operates <lit>+</lit>, <lit>-</lit>, <lit>/</lit>, <lit>*</lit>
+				- tina compares <lit>and</lit>, <lit>or</lit>, <lit>{'<'}</lit>, <lit>{'>'}</lit>, <lit>{'<='}</lit>, <lit>{'>='}</lit>
+				- socrates decides <lit>if else</lit>
 			</span>	
 		{:else if page == 6}
 			<h2>Chaining</h2>
@@ -206,8 +208,15 @@
 		font-size: .86rem;	
 	}
 
-	strong, lit {
-		color: var(--gold)
+	strong {
+		color: var(--gold);
+	}
+
+	lit {
+		font-weight: 400;
+		color: var(--lightGray);
+		border-radius: 2px;
+		background: var(--darkGray);
 	}
 
 	input {
