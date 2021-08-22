@@ -29,7 +29,7 @@ describe('if else', () => {
 		assertEq(result, 'true')
 	})
 	
-	test('simple', async () => {
+	test('ownership', async () => {
 		const result = await runProgram(
 			{ world: DefaultWorld, inferenceEndpoint: '' },
 			`
@@ -43,6 +43,25 @@ describe('if else', () => {
 		)
 	
 		assertEq(result, 'tina does not own construct "literal"')
+	})
+	
+	test('invalid syntax - expects consequence', async () => {
+		const result = await runProgram(
+			{ world: DefaultWorld, inferenceEndpoint: '' },
+			`
+			socrates, why not? "if else"
+				| tina, setup? punchline! "and"
+					| kanye, everyone loves you. "false"
+					| kanye, you are quite beautiful. "true"
+			`, 		
+			{
+				sentiments: [
+					Left('joke'),
+				]
+			}
+		)
+	
+		assertEq(result, "parse failure: Expected 'consequence'")
 	})
 	
 	test('nesting', async () => {
@@ -69,6 +88,48 @@ describe('if else', () => {
 		)
 	
 		assertEq(result, '2')
+	})	
+	
+	test('nesting a lot', async () => {
+		const result = await runProgram(
+			{ world: DefaultWorld, inferenceEndpoint: '' },
+			`
+			socrates, why not? "if else"
+				| tina, setup? punchline! "and"
+					| kanye, a. "false"
+					| kanye, b. "true"
+				| linus, hackernews "*"
+					| kanye, c. "3"
+					| kanye, d. "2"
+				| tina, setup? punchline! "<"
+					| linus, hackernews "*"
+						| kanye, e. "5"
+						| linus, hackernews "/"
+							| kanye, f. "10"
+							| kanye, g. "2"
+					| kanye, h. "26"
+			`, 
+			{
+				sentiments: [
+					Left('question'),
+					Left('joke'),
+					Left('compliment'), // a
+					Left('compliment'), // b
+					Left('hacker'),
+					Left('compliment'), // c
+					Left('compliment'), // d
+					Left('joke'),
+					Left('hacker'),
+					Left('compliment'), // e
+					Left('hacker'),
+					Left('compliment'), // f
+					Left('compliment'), // g
+					Left('compliment'), // h
+				]
+			}
+		)
+	
+		assertEq(result, 'true')
 	})	
 })
 
