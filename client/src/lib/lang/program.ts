@@ -64,7 +64,7 @@ const handleParseFailure = (e: Error, input: string, rest: string) => {
 let apiFails = 0
 
 const handlePoorResponse = (e: RespondError): string => {
-	const apiFailMsg = apiFails > 2
+	const apiFailMsg = apiFails > 1
 		? '\nIf this error keeps occurring, you can set the inference engine to always accept your comments type:'
 			+ '\nset-engine=always-accept'
 		: ''
