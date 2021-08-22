@@ -3,10 +3,9 @@ const snoowrap = require('snoowrap');
 const fs = require('fs');
 const {readFile} = require('fs/promises');
 const assert = require('assert');
-// const fetch = require('node-fetch');
 require('dotenv').config()
 
-const labelMap = { compliment: 0, question: 1, joke: 2, hacker: 3, insult: 4, sad_quote: 5 }
+const labelMap = { compliment: 0, question: 1, joke: 2, hacker: 3 }
 
 const { userAgent, clientId, clientSecret, refreshToken, accessToken } = process.env
 const r = new snoowrap({ userAgent, clientId, clientSecret, refreshToken, accessToken })
@@ -23,79 +22,78 @@ const fromFile = async (filename) => {
 const getBody = post => post.selftext
 const getTitle = post => post.title
 const getTitlesFromPosts = posts => posts.map(getTitle)
-const topFromSub = (sub, limit) => r.getSubreddit(sub).getTop({ limit, time: 'year' })
+const postsFromSub = async (sub, limit) => {
+	// limit seems to max at 1000, so its largely ignored since i'm requesting way more than 1000
+	const promises = await Promise.all([
+		r.getSubreddit(sub).getTop({ limit, time: 'all' }),
+		r.getSubreddit(sub).getTop({ limit, time: 'year' }),
+		r.getSubreddit(sub).getTop({ limit, time: 'month' }),
+		r.getSubreddit(sub).getTop({ limit, time: 'day' }),
+		r.getSubreddit(sub).getHot({ limit, time: 'all' }),
+		r.getSubreddit(sub).getHot({ limit, time: 'year' }),
+		r.getSubreddit(sub).getHot({ limit, time: 'month' }),
+		r.getSubreddit(sub).getHot({ limit, time: 'day' }),
+	])
+
+	const results = promises.flatMap(x => x)
+	const ids = results.map(p => p.id)
+
+	// deduplicate
+	return results.filter(({ id }, index) => !ids.includes(id, index + 1))
+}
 
 async function getQuestions(total) {
 	const numReddits = 1
 	const limit = Math.floor(total / numReddits)
 
 	const fromAskReddit = async () => {
-		const posts = await topFromSub('AskReddit', limit)
+		const posts = await postsFromSub('AskReddit', limit)
 		return getTitlesFromPosts(posts)
 	}
 
 	return (
-		await Promise.all([ fromAskReddit(),  ])
+		await Promise.all([ 
+			fromAskReddit(),  
+			fromFile('./data/questions'),
+		])
 	).flatMap(x => x)
 }
 
 async function getHacker(total) {
-	const posts = await topFromSub('hackernews', total)
+	const posts = await postsFromSub('hackernews', total)
 	return getTitlesFromPosts(posts)
 }
 
 async function getJokes(total) {
-	const posts = await topFromSub('jokes', total * 2)
+	const posts = await postsFromSub('jokes', total * 2)
+	const jokeFile = await fromFile('./data/jokes')
 	
-	return posts
+	return [...jokeFile, ...posts]
 		.map(post => getTitle(post) + ' ' + getBody(post))
 		// FIXME this causes the number of jokes to be cut in half..roughly. 
 		// Dirty fix is the above * 2
-		.filter(joke => joke.length < 200)		
+		.filter(joke => joke.length < 300)		
 }
 
 async function getCompliments() {
-	// const printMantelligence = async () => {
-	// 	const res = await fetch('https://www.mantelligence.com/compliments/')
-	// 	const html = await res.text()
-	// 	const r = /<h4 class="quest compliments">\d*\.(.*?)<\/h4>/g
-	// 	const matches = html.match(r)
-	// 		.map(match => { const res = r.exec(match); return res ? res[1] : null })
-	// 		.filter(match => typeof match === 'string' && match != null)
-	// 		.map(x => x.replace(/&rsquo;/g, '\''))
-
-	// 	console.log(matches.length)
-	// 	return matches.join('\n')
-	// }
-	// printMantelligence().then(console.log)
-
 	return fromFile('./data/compliments')
 }
 
-async function getInsults() {
-	return fromFile('./data/insults')
-}
-
-async function getSadQuotes() {
-	return fromFile('./data/sad')
-}
-
+// TODO compliments are very underrepresented in dataset
 async function main() {
-	const categorySize = 600
+	const categorySize = 4_000
 	const trainSize = .80	
 	
-	// TODO history fact
-	const [compliment, question, hacker, joke, insult, sad_quote] = await Promise.all([
+	// TODO history fact	
+	const [compliment, question, hacker, joke] = await Promise.all([
 		getCompliments(),
 		getQuestions(categorySize),
 		getHacker(categorySize),
 		// TODO use https://pun.me/funny/
 		getJokes(categorySize),
-		getInsults(),
-		getSadQuotes(),
 	])
 
-	const results = { compliment, question, joke, hacker, insult, sad_quote }		
+	const results = { compliment, question, joke, hacker }		
 	
 	assert(Object.keys(results).join() == Object.keys(labelMap).join())
 
