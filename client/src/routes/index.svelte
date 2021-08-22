@@ -82,7 +82,7 @@
 
 <img class='cloud' id='cloud-fg-1' src='/cloud-1.png' alt='cloud'>
 
-<style>
+<style>	
 	#state {
 		position: fixed;
 		bottom: var(--s-2);
@@ -139,5 +139,14 @@
 		position: fixed;
 		width: 100vw;
 		filter: grayscale(40%);
+	}
+	@media only screen and (max-width: 800px) {
+		#sky {
+			width: auto;
+			height: 400vh;
+		}
+		#cloud-fg-1 {
+			opacity: .1;
+		}
 	}
 </style>

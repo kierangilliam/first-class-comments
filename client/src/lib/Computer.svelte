@@ -32,6 +32,22 @@
 		padding-bottom: var(--s-6);
 	}
 
+	img {
+		width: 900px;
+		height: 800px;
+	}
+
+	@media only screen and (max-width: 600px) {
+		img {
+			height: 600px;	
+			width: 600px;	
+		}	
+		.screen {
+			top: 10.2%;
+			overflow: scroll;
+		}
+	}
+
 	/* modified from https://blog.carbonfive.com/vintage-terminal-effect-in-css3/ */
 	.screen:before {
       content : '';
@@ -65,10 +81,5 @@
 			top: 90%;
 			opacity: 0;
 		}
-	}
-
-	img {
-		width: 900px;
-		height: 800px;
-	}
+	}	
 </style>
