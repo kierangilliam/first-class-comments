@@ -23,6 +23,13 @@
 		height: 57%;
 		mix-blend-mode: hard-light;
 		transform: skew(2deg, 0deg);
+
+		color: var(--white);
+		font-family: var(--monoFont);
+		font-size: var(--h4);
+		padding: var(--s-4);
+		padding-left: var(--s-6);
+		padding-bottom: var(--s-6);
 	}
 
 	/* modified from https://blog.carbonfive.com/vintage-terminal-effect-in-css3/ */

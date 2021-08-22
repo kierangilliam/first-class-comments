@@ -13,6 +13,9 @@ interface ProgramPatches {
 export const runProgram = async (
 	ctx: ProgramCtx, input: string, patch?: ProgramPatches
 ): Promise<string> => {
+	if (input.startsWith('man')) 
+		return handleManual(input)
+
 	const [parseResult, rest] = parse(input)
 	if (parseResult.error) 			
 		return handleParseFailure(parseResult.error, input, rest)
@@ -28,6 +31,19 @@ export const runProgram = async (
 	}
 
 	return evaluation.left
+}
+
+const handleManual = (input: string): string => {
+	switch (input) { 
+		case 'man ownership': 
+			return `kanye is literal (3 'text' true false)
+				linus operates (+ - / *)
+				tina compares (and or > < <= >=)
+				socrates decides (if _ else _)
+				`
+		default:
+			return `unknown manual: ${input}`
+	}
 }
 
 const handleParseFailure = (e: Error, input: string, rest: string) => {

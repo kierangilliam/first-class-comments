@@ -37,15 +37,6 @@ const BASE = {
     darkOrange: '#FE8414',
 }
 
-/**
- * WEBULL
- * 
- * --tabDisabledColor: var(--lightBlueGray),
- * --tabHoverColor: var(--lightestBlueGray),
- * 
- * opensans semi bold
- */
-
 const ATOM_COLORS = {
     // LINES
     hairLineColor: BASE.lighterGray,
@@ -83,9 +74,6 @@ const TEXT_COLORS = {
     text: BASE.black,
     lightText: BASE.darkGray,
     lighterText: BASE.gray,
-    // Specific colors
-    PUTColor: BASE.darkPurple,
-    CALLColor: BASE.darkGold,
 }
 
 export const COLORS = {

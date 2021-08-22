@@ -35,8 +35,6 @@
 			case 'Control':
 				controlKeyPressed = true
 		}
-
-		console.log({ metaKeyPressed: controlKeyPressed })
 	}
 
 	const onTerminalKeyUp = (e: KeyboardEvent) => {
@@ -87,8 +85,8 @@
 	use:clickOutside={onClickOutside}
 >
 	{#each $program.history as { input, output } }
-		<p>$ {input}</p>
-		<p>{output}</p>
+		<p>{input}</p>
+		<output>{output}</output>
 	{/each}
 
 	{#if $program.working}
@@ -116,21 +114,26 @@
 
 <style>
 	.terminal {
-		padding: var(--s-4);
 		overflow-y: scroll;		
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-end;
 		width: 100%;
-		height: 100%;
-		color: var(--white);
-		font-family: var(--monoFont);
-		font-size: var(--h4);
+		height: 100%;		
+	}
+
+	p::before, .cursor {
+		content: '$ ';
+		color: var(--gray);
 	}
 
 	.terminal-input {
 		display: flex;
 		width: 100%;
+	}
+
+	output {
+		white-space: pre-line;
 	}
 
 	.cursor { 

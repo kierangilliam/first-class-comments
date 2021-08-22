@@ -7,54 +7,72 @@
 </script>
 
 <script lang='ts'>
-	import { startProgram } from '$lib/lang'
-	import Terminal from '$lib/components/Terminal.svelte';
+	import { fly } from 'svelte/transition'
 	import { writable } from 'svelte/store'
 	import { dev } from '$app/env'
+	import { startProgram } from '$lib/lang'
+	import Terminal from '$lib/components/Terminal.svelte'
 	import Airplane from '$lib/components/airplane/Airplane.svelte'
 	import Computer from '$lib/Computer.svelte'
+	import { persistent } from '$lib/utils'
+	import Help from '$lib/components/Help.svelte'
 
 	const inferenceEndpoint = dev
 		? 'http://localhost:8999/inference'
 		: 'https://first-class-comments.deno.dev/inference'
 
 	const input = writable<string>(null)
-	const program = startProgram(input, { inferenceEndpoint })	
+	const showHelp = persistent('show-help', true)
+	$: program = $showHelp ? null : startProgram(input, { inferenceEndpoint })	
+
+	const hideHelp = () => {
+		$showHelp = false
+	}
 
 	const setInput = (e: { detail: string }) => {
-		// Force update even if last input === e.detail
-		$input = ''
-		$input = e.detail
+		if (e.detail === 'help') {
+			$showHelp = true
+		} else {
+			// Force update even if last input === e.detail
+			$input = ''
+			$input = e.detail		
+		}
 	}
 </script>
-
-<!-- <section>
-	TODO: Help
-	<p>use control-enter to submit terminal</p>
-</section> -->
 
 <img id='sky' src='/sky.jpeg' alt='sky'>
 
 <img class='cloud' id='cloud-1' src='/cloud-1.png' alt='cloud'>
 <img class='cloud' id='cloud-2' src='/cloud-1.png' alt='cloud'>
 
-<Airplane --z-index={100} {program} />
+{#if !$showHelp}
+	<!-- TODO noisedive in/out -->
+	<div in:fly={{ y: -100 }} out:fly={{ y: -100 }} >
+		<Airplane --z-index={100} {program} />
+	</div>
+{/if}
 
 <img class='cloud' id='cloud-3' src='/cloud-2.png' alt='cloud'>
 
 <Computer --z-index={200}>
-	<Terminal on:input={setInput} {program} />
+	{#if $showHelp}
+		<Help on:done={hideHelp} />
+	{:else}
+		<Terminal on:input={setInput} {program} />
+	{/if}
 </Computer>
 
-<div id='state'>
-	{#each Object.entries($program.world.citizens) as [name, state]}
-		<div class='person'>
-			<strong>{name}</strong> is {state.type}
-		</div>
-	{/each}
+{#if !$showHelp}
+	<div id='state'>
+		{#each Object.entries($program.world.citizens) as [name, state]}
+			<div class='person'>
+				<strong>{name}</strong> is {state.type}
+			</div>
+		{/each}
 
-	<a href='https://github.com/kierangilliam/first-class-comments'>source</a>
-</div>
+		<a target='_blank' href='https://github.com/kierangilliam/first-class-comments'>source</a>
+	</div>
+{/if}
 
 <img class='cloud' id='cloud-fg-1' src='/cloud-1.png' alt='cloud'>
 
@@ -69,6 +87,7 @@
 	}
 
 	.cloud {
+		pointer-events: none;
 		position: fixed;
 	}
 
@@ -97,6 +116,7 @@
 		bottom: -65%;
 		height: 900px;
 		animation: cloud 110s linear infinite;
+		opacity: .8;
 	}
 
 	@keyframes cloud {

@@ -90,6 +90,7 @@ const app = new Application()
 
 app.use(
     oakCors({ 
+        // TODO
         // origin: dev ? '*' : 'https://first-class-comment.netlify.app/'
         origin: '*'
     })

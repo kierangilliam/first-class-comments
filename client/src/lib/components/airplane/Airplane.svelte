@@ -6,13 +6,14 @@
 	export let program: Readable<ProgramState>
 
 	let plane: HTMLDivElement
-
+	 
 	onMount(() => {
 		const magnitude = 45
 		const slowdown = 1000
-		let fired = false
 
 		const animate = () => {
+			if (!plane) return
+
 			const t = Date.now() / slowdown
 
 			// figure 8
@@ -20,13 +21,9 @@
 			plane.style.top = (Math.sin(2 * t) / 2) * magnitude + 'px'
 		}
 		
-		// in dev mode this will fire many times
-		if (!fired)
-			setInterval(() => {
-				requestAnimationFrame(animate)
-			}, 150)
-		
-		fired = true
+		setInterval(() => {
+			requestAnimationFrame(animate)
+		}, 150)
 	})
 </script>
 
