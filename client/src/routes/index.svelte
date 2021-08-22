@@ -16,6 +16,7 @@
 	import Computer from '$lib/Computer.svelte'
 	import { persistent } from '$lib/utils'
 	import Help from '$lib/components/Help.svelte'
+	import { planeFly } from '$lib/actions';
 
 	const inferenceEndpoint = dev
 		? 'http://localhost:8999/inference'
@@ -38,6 +39,7 @@
 			$input = e.detail		
 		}
 	}
+	
 </script>
 
 <img id='sky' src='/sky.jpeg' alt='sky'>
@@ -47,7 +49,10 @@
 
 {#if !$showHelp}
 	<!-- TODO noisedive in/out -->
-	<div in:fly={{ y: -100 }} out:fly={{ y: -100 }} >
+	<div 
+		in:planeFly={{ duration: 2000, y: -500, x: 500 }}
+		out:planeFly={{ duration: 2000, y: -500, x: -1000, out: true }}
+	>
 		<Airplane --z-index={100} {program} />
 	</div>
 {/if}

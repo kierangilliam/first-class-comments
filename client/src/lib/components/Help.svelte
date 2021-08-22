@@ -128,7 +128,7 @@
 	
 		<div>
 			<span>$</span>
-			<input type='text' bind:value={terminalInput}>
+			<input autofocus type='text' bind:value={terminalInput}>
 		</div>
 	</div>
 </div>
@@ -163,9 +163,11 @@
 
 	input {
 		width: 90%;
-		background: none;
 		color: var(--white);
-		border: var(--hairline);
+		background: var(--darkerGray);
+		color: var(--white);
+		outline: 0;
+		border: 0;
 	}
 
 	.error {

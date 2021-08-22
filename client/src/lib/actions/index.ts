@@ -1,4 +1,4 @@
-import type { Readable } from 'svelte/store'
+import { cubicOut } from 'svelte/easing';
 
 // modified from: https://svelte.dev/repl/0ace7a508bd843b798ae599940a91783?version=3.16.7
 export const clickOutside = (node: HTMLElement, handler: () => any): any => {
@@ -17,31 +17,17 @@ export const clickOutside = (node: HTMLElement, handler: () => any): any => {
 	}
 }
 
-// TODO delete?
-export const blink = (node: HTMLElement, opts: { interval: number, blinking?: Readable<boolean> }): void => {
-	const show = () => node.style.opacity = '1'
-	const hide = () => node.style.opacity = '0'
+// whatever this isn't an action. im tired
+export function planeFly(node, { duration, y, x, out=false }) {
+	return {
+		duration,
+		css: t => {
+			const eased = 1 - cubicOut(t)
+			const deg = eased * (out ? 35 : -35)
 
-	let timer = null
-
-	const startTimer = () => {
-		timer = setInterval(() => {
-			show()
-			setTimeout(hide, opts.interval / 2)
-		}, opts.interval)
-	}
-
-	if (opts.blinking != null) {
-		opts.blinking.subscribe($blink => {
-			if (!$blink && timer) {
-				clearInterval(timer)
-				node.style.opacity = '1'
-				return
-			}
-
-			startTimer()
-		})
-	} else {
-		startTimer()
-	}
+			return `
+				transform: rotate(${deg}deg) translateX(${(eased) * x}px) translateY(${(eased) * y}px);
+			`
+		}
+	};
 }
