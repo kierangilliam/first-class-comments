@@ -38,13 +38,16 @@
 	}
 
 	@media only screen and (max-width: 600px) {
+		.container {
+			bottom: -22%;
+		}
 		img {
 			height: 600px;	
 			width: 600px;	
 		}	
 		.screen {
-			top: 10.2%;
 			overflow: scroll;
+			font-size: 1rem;
 		}
 	}
 
