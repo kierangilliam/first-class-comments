@@ -11,6 +11,7 @@
 	import Terminal from '$lib/components/Terminal.svelte';
 	import { writable } from 'svelte/store'
 	import { dev } from '$app/env'
+import Airplane from '$lib/components/airplane/Airplane.svelte';
 
 	const inferenceEndpoint = dev
 		? 'http://localhost:8999/inference'
@@ -26,25 +27,31 @@
 	}
 </script>
 
-<section>
-	<h1>yeet</h1>
+<!-- <section>
+	TODO: Help
 	<p>use control-enter to submit terminal</p>
-</section>
-
-<Terminal on:input={setInput} {program} />
-
-{#each Object.entries($program.world.citizens) as [name, state]}
-	<p><strong>{name}</strong> is {state.type}</p>
-{/each}
+</section> -->
 
 <a href='https://github.com/kierangilliam/first-class-comments'>Project Link</a>
 
+<div class="container">
+	<Airplane --z-index={100} {program} />
+	<Terminal --z-index={200} on:input={setInput} {program} />
+</div>
+
+
 <style>
-	section {
+	.container {
+		height: 100vh;
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
+		justify-content: space-between;
 		align-items: center;
-		flex: 1;
+	}
+
+	a {
+		position: absolute;
+		top: 0;
+		left: 0;
 	}
 </style>

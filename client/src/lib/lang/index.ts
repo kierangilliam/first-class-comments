@@ -37,7 +37,7 @@ export const startProgram = (
 					}
 				]
 		}))
-	}, 60_000)
+	}, 1_000)
 
 	input.subscribe(async $input => {
 		if (!$input || get(store).working) return

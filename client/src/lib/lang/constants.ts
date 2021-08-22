@@ -3,16 +3,14 @@ import type { WorldState } from './world'
 
 
 // copy pasted from /data/acquisition/get-and-format-data
-export const labelMap = { compliment: 0, question: 1, joke: 2, hacker: 3, insult: 4, sad_quote: 5 }
+export const labelMap = { compliment: 0, question: 1, joke: 2, hacker: 3 }
 
-export const citizens: Citizen[] = ['linus', 'socrates', 'tina', 'maria', 'reginald', 'kanye']
+export const citizens: Citizen[] = ['linus', 'socrates', 'tina', 'kanye']
 
 export const firstClassCitizens: Record<keyof typeof labelMap, Citizen> = {
 	hacker: 'linus',
 	question: 'socrates',
 	joke: 'tina',
-	sad_quote: 'maria',
-	insult: 'reginald',
 	compliment: 'kanye',
 }
 
@@ -24,8 +22,6 @@ export const DefaultWorld: WorldState = {
 		linus: DefaultState,
 		socrates: DefaultState,
 		tina: DefaultState,
-		maria: DefaultState,
-		reginald: DefaultState,
 		kanye: DefaultState,
 	}
 }

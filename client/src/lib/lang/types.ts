@@ -13,7 +13,7 @@ export type Emotion = ({
 	reason: string,
 }))
 
-export type Citizen = 'linus' | 'socrates' | 'tina' | 'maria' | 'reginald' | 'kanye'
+export type Citizen = 'linus' | 'socrates' | 'tina' | 'kanye'
 
 export type ProgramCtx = {
 	world: WorldState

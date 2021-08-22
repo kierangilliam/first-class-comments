@@ -116,6 +116,8 @@
 
 <style>
 	.terminal {
+		overflow-y: scroll;
+		z-index: var(--z-index);
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-end;
