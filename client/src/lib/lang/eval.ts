@@ -26,10 +26,17 @@ export const evaluate = (ast: ExpressionAST): EvaluationResult => {
 			return evalIf(ast)
 		case 'comparison':
 			return evalCompare(ast)
+		case 'math':
+			return evalMath(ast)
 		case 'literal':
 			return Left(ast.value)
-		default:
-			return Right({ type: 'unimplemented', astType: ast.type })
+		default: {
+			// `ast.type is never`
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			const astType = ast.type
+			return Right({ type: 'unimplemented', astType })
+		}
 	}
 }
 
@@ -41,6 +48,21 @@ const evalIf = (ast: ExpressionAST & { type: 'if' }): EvaluationResult => {
 		return evaluate(ast.consequence)
 	else 
 		return evaluate(ast.alternative)
+}
+
+const evalMath = (ast: ExpressionAST & { type: 'math' }): EvaluationResult => {
+	const left = evalNumber(ast.left)
+	if (left.isRight) return Right(left.right)
+
+	const right = evalNumber(ast.right)
+	if (right.isRight) return Right(right.right)
+	
+	switch (ast.operator) {
+		case '+': return Left(`${left.left + right.left}`)
+		case '-': return Left(`${left.left - right.left}`)
+		case '/': return Left(`${left.left / right.left}`)
+		case '*': return Left(`${left.left * right.left}`)
+	}
 }
 
 const evalCompare = (ast: ExpressionAST & { type: 'comparison' }): EvaluationResult => {

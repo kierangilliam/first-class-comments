@@ -34,7 +34,7 @@ export type MathOperator = '+' | '-' | '/' | '*'
 export type ComparisonOperator = '<' | '>' | '<=' | '>=' | 'or' | 'and'
 
 export type ExpressionAST = {
-	type: 'if' | 'literal' | 'comparison' | 'operator'
+	type: 'if' | 'literal' | 'comparison' | 'math'
 	comment: Comment
 } & ({
 	type: 'if',
@@ -48,8 +48,8 @@ export type ExpressionAST = {
 } | {
 	// linus
 	// infix only
-	type: 'operator'
-	operator: '+' | '-' | '/' | '*'
+	type: 'math'
+	operator: MathOperator
 	left: ExpressionAST
 	right: ExpressionAST
 } | {

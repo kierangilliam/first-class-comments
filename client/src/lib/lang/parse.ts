@@ -1,7 +1,7 @@
 import type { Res } from '$lib/trust';
 import { Err, ExpectError, Ok, Option } from '$lib/trust';
 import { citizens } from './constants';
-import type { Citizen, Comment, ComparisonOperator, ExpressionAST } from './types';
+import type { Citizen, Comment, ComparisonOperator, ExpressionAST, MathOperator } from './types';
 
 // expression ast, rest of input
 export type ParseResult = [Res<ExpressionAST>, string]
@@ -57,12 +57,12 @@ const _parse = (input: string): ParseResult => {
 
 	const { comment, toParse } = parseStatement(first).unwrap
 
-	if (toParse === 'if _ else _') {
+	if (toParse === 'if _ else _') 
 		return parseIf(comment, toParse, rest)		
-	} 
-	else if (comparisonMatch(toParse).isSome) {
+	else if (comparisonOperatorMatch(toParse).isSome) 
 		return parseComparison(comment, toParse, rest)
-	} 
+	else if (mathOperatorMatch(toParse).isSome) 
+		return parseMath(comment, toParse, rest)
 	else if (literalMatch(toParse).isSome) {
 		const value = literalMatch(toParse).expect('literal match')
 		debug('literal match', value)
@@ -82,7 +82,7 @@ const literalMatch = (input: string): Option<string> => {
 	}
 }
 
-const comparisonMatch = (input: string): Option<ComparisonOperator> => {
+const comparisonOperatorMatch = (input: string): Option<ComparisonOperator> => {
 	try {
 		const [_, match] = /^(<|>|<=|>=|and|or)$/g.exec(input.trim())
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -93,8 +93,33 @@ const comparisonMatch = (input: string): Option<ComparisonOperator> => {
 	}
 }
 
+const mathOperatorMatch = (input: string): Option<MathOperator> => {
+	try {
+		const [_, match] = /^(\+|\/|-|\*)$/g.exec(input.trim())
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		return Option.Some(match)
+	} catch (e) {
+		return Option.None
+	}
+}
+
+const parseMath: ParseExp<'math'> = (comment, operatorString, nestedInput) => {
+	const operator = mathOperatorMatch(operatorString).expect('math operator')
+
+	const [l, rest1] = _parse(nestedInput)
+	const left = l.expect('left')
+
+	const [r, rest2] = _parse(rest1)
+	const right = r.expect('right')
+
+	debug('comparison match', operator, left, right)
+
+	return [Ok({ type: 'math', operator, comment, left, right }), rest2]
+}
+
 const parseComparison: ParseExp<'comparison'> = (comment, operatorString, nestedInput) => {
-	const operator = comparisonMatch(operatorString).expect('comparison operator')
+	const operator = comparisonOperatorMatch(operatorString).expect('comparison operator')
 
 	const [l, rest1] = _parse(nestedInput)
 	const left = l.expect('left')

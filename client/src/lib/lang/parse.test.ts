@@ -1,7 +1,7 @@
 import type { ParseResult } from '$lib/lang/parse';
 import parse from '$lib/lang/parse';
-import { assertEq, com, comp, lit } from './test-utilts';
-import type { ComparisonOperator, ExpressionAST } from './types';
+import { assertEq, com, comp, lit, math } from './test-utilts';
+import type { ComparisonOperator, ExpressionAST, MathOperator } from './types';
 
 const assertError = (a: ParseResult, message: string): void => 
 	assertEq(a[0].error.message, message)
@@ -23,6 +23,26 @@ describe('compare', () => {
 				tina, insert joke "${o}" 
 					| kanye, everyone loves you. "2" 
 					| kanye, you are quite beautiful. "3"
+			`)
+			assertParse(result, makeBasic(o), o)
+		})
+	})
+})
+
+describe('math', () => {
+	const ops: MathOperator[] = ['+', '-', '/', '*']
+	const makeBasic = (o: MathOperator) => math(o,
+		lit('3', com('kanye', 'everyone loves you.')),
+		lit('4', com('kanye', 'you are quite beautiful.')),
+		com('linus', 'insert hn title'),
+	)	
+
+	test('3, 4', () => {
+		ops.forEach(o => {
+			const result = parse(`
+				linus, insert hn title "${o}" 
+					| kanye, everyone loves you. "3" 
+					| kanye, you are quite beautiful. "4"
 			`)
 			assertParse(result, makeBasic(o), o)
 		})

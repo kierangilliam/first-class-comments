@@ -2,6 +2,7 @@ import { Left } from '$lib/trust';
 import { DefaultWorld } from './constants';
 import { runProgram } from './program';
 import { assertEq } from './test-utilts';
+import type { MathOperator } from './types';
 import { updateCitizen } from './world';
 
 describe('if _ else _', () => {
@@ -69,6 +70,32 @@ describe('world', () => {
 	})
 })
 
+describe('math', () => {
+	const ops: MathOperator[] = ['+', '-', '/', '*']
+	const ctx = { world: DefaultWorld, inferenceEndpoint: '' }
+
+	test('3, 4', async () => {
+		const expected = ['7', '-1', '0.75', '12']
+
+		for (let i = 0; i < ops.length; i++) {
+			const result = await runProgram(ctx ,
+				`linus, insert hn title "${ops[i]}" 
+					| kanye, everyone loves you. "3" 
+					| kanye, you are quite beautiful. "4"
+				`,
+				{ 
+					sentiments: [
+						Left('hacker'),
+						Left('compliment'),
+						Left('compliment'),
+					] 
+				},
+			)
+			
+			assertEq(result, expected[i], ops[i])
+		}
+	})
+})
 
 // TODO
 /**
@@ -81,6 +108,7 @@ MathOperator
 plane with windows and names in windows
 plane on change do update for 1sec
 Terminal as computer
+	- also wrap lines on |
 plane with images
 mobile style
 [maybe] visual plane effects (flying)

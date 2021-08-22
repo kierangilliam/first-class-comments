@@ -113,14 +113,20 @@ const getComments = (ast: ExpressionAST): Comment[] => {
 			]
 		case 'literal':
 			return [ast.comment]
+		case 'math':
 		case 'comparison':
 			return [
 				ast.comment, 
 				...getComments(ast.left),
 				...getComments(ast.right),
 			]
-		default:
-			throw new Error(`get comments: unimplemented :: ${ast.type}`)
+		default: {
+			// `ast.type is never`
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			const type = ast.type
+			throw new Error(`get comments: unimplemented :: ${type}`)
+		}
 	}
 }
 
