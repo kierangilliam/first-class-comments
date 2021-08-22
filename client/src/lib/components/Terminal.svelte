@@ -116,14 +116,13 @@
 
 <style>
 	.terminal {
-		overflow-y: scroll;
-		z-index: var(--z-index);
+		padding: var(--s-4);
+		overflow-y: scroll;		
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-end;
-		width: 600px;
-		height: 400px;
-		background: var(--black);
+		width: 100%;
+		height: 100%;
 		color: var(--white);
 		font-family: var(--monoFont);
 		font-size: var(--h4);

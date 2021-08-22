@@ -12,6 +12,7 @@
 	import { writable } from 'svelte/store'
 	import { dev } from '$app/env'
 import Airplane from '$lib/components/airplane/Airplane.svelte';
+import Computer from '$lib/Computer.svelte';
 
 	const inferenceEndpoint = dev
 		? 'http://localhost:8999/inference'
@@ -32,26 +33,37 @@ import Airplane from '$lib/components/airplane/Airplane.svelte';
 	<p>use control-enter to submit terminal</p>
 </section> -->
 
-<a href='https://github.com/kierangilliam/first-class-comments'>Project Link</a>
+<img id='sky' src='/sky.jpeg' alt='sky'>
 
-<div class="container">
-	<Airplane --z-index={100} {program} />
-	<Terminal --z-index={200} on:input={setInput} {program} />
+<Airplane --z-index={100} {program} />
+
+<Computer --z-index={200}>
+	<Terminal on:input={setInput} {program} />
+</Computer>
+
+<div id='state'>
+	{#each Object.entries($program.world.citizens) as [name, state]}
+		<div class='person'>
+			<strong>{name}</strong> is {state.type}
+		</div>
+	{/each}
+
+	<a href='https://github.com/kierangilliam/first-class-comments'>source</a>
 </div>
 
-
 <style>
-	.container {
-		height: 100vh;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		align-items: center;
+	#state {
+		position: fixed;
+		bottom: var(--s-2);
+		left: var(--s-2);
+	}
+	#state a {
+		font-weight: var(--weightBold);
 	}
 
-	a {
-		position: absolute;
-		top: 0;
+	#sky {
 		left: 0;
+		position: fixed;
+		width: 100vw;
 	}
 </style>

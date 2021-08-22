@@ -1,31 +1,46 @@
 <script lang='ts'>
 	import type { Readable } from 'svelte/store'
 	import type { ProgramState } from '$lib/lang'
+	import { onMount } from 'svelte';
 
 	export let program: Readable<ProgramState>
+
+	let plane: HTMLDivElement
+
+	onMount(() => {
+		const magnitude = 45
+		const slowdown = 1000
+
+		const animate = () => {
+			const t = Date.now() / slowdown
+
+			// figure 8
+			plane.style.left = (Math.cos(t)) * magnitude + 'px'
+			plane.style.top = (Math.sin(2 * t) / 2) * magnitude + 'px'
+		}
+		
+		setInterval(() => {
+			requestAnimationFrame(animate)
+		}, 150)
+	})
 </script>
 
 <div class='wrapper'>
-	<div class='container'>
+	<div bind:this={plane} class='container'>
 		<img src='/seats.png' alt='seats'>		
 		{#each Object.entries($program.world.citizens) as [name, state]}
 			<img src={`${name}-${state.type}.png`} alt={`${name}-${state.type}`}>
 		{/each}
 		<img src='/plane.png' alt='seats'>
 	</div>
-	<div class='people'>
-		{#each Object.entries($program.world.citizens) as [name, state]}
-			<div class='person'>
-				<strong>{name}</strong> is {state.type}
-			</div>
-		{/each}
-	</div>
 </div>
 
 <style>
 	.wrapper {
+		position: fixed;
+		left: 50vw;
+		transform: translateX(-50%);
 		z-index: var(--z-index);
-		position: relative;
 		width: 750px;
 		height: 250px;
 	}
@@ -38,18 +53,10 @@
 		height: 100%;
 	}
 
-	.people {
-		position: fixed;
-		top: 50px;
-		left: 0;
-	}
-	.person {
-		font-size: var(--h3);
-	}
-
 	.container {
-		width: 500%;
-		height: 500%;
-		transform: translate(-15%, -50%);
+		width: 300%;
+		height: 300%;
+		transform: translate(-15%, -51%);
+		transition: left 250ms ease-in, top 250ms ease-out;
 	}
 </style>
