@@ -49,15 +49,15 @@ describe('math', () => {
 	})
 })
 
-describe('if _ else _', () => {
+describe('if else', () => {
 	test('parse failure :: no condition', () => {
-		const result = parse('socrates, why not? "if _ else _"')
+		const result = parse('socrates, why not? "if else"')
 		assertError(result, "Expected 'condition'")
 	})
 
 	test('basic', () => {
 		const result = parse(`
-			socrates, why not? "if _ else _"
+			socrates, why not? "if else"
 				| kanye, you are beautiful. "false"
 				| kanye, everyone loves you. "2"    
 				| kanye, you are quite beautiful. "true"
@@ -74,7 +74,7 @@ describe('if _ else _', () => {
 	
 	test('nesting', () => {
 		const result = parse(`
-			socrates, why not? "if _ else _"
+			socrates, why not? "if else"
 				| tina, some joke. ">="
 					| kanye, compliment a. "100"    
 					| kanye, compliment b. "200"

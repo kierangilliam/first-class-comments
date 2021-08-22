@@ -57,7 +57,7 @@ const _parse = (input: string): ParseResult => {
 
 	const { comment, toParse } = parseStatement(first).unwrap
 
-	if (toParse === 'if _ else _') 
+	if (toParse === 'if else') 
 		return parseIf(comment, toParse, rest)		
 	else if (comparisonOperatorMatch(toParse).isSome) 
 		return parseComparison(comment, toParse, rest)
@@ -133,7 +133,7 @@ const parseComparison: ParseExp<'comparison'> = (comment, operatorString, nested
 }
 
 /**
-socrates, why not? "if _ else _"
+socrates, why not? "if else"
 	| kanye, you are beautiful. "false"   < condition                (should eval to truthy value)
 	| kanye, you are beautiful. "2"       < followed by consequence  (any exp)
 	| kanye, you are beautiful. "false"   < followed by alternative  (any exp)

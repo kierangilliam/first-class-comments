@@ -5,13 +5,13 @@ import { assertEq } from './test-utilts';
 import type { MathOperator } from './types';
 import { updateCitizen } from './world';
 
-describe('if _ else _', () => {
+describe('if else', () => {
 
 	test('simple', async () => {
 		const result = await runProgram(
 			{ world: DefaultWorld, inferenceEndpoint: '' },
 			`
-			socrates, why not? "if _ else _"
+			socrates, why not? "if else"
 				| kanye, you are beautiful. "false"
 				| kanye, everyone loves you. "2"    
 				| kanye, you are quite beautiful. "true"
@@ -29,11 +29,27 @@ describe('if _ else _', () => {
 		assertEq(result, 'true')
 	})
 	
+	test('simple', async () => {
+		const result = await runProgram(
+			{ world: DefaultWorld, inferenceEndpoint: '' },
+			`
+			tina, setup? punchline! "3"
+			`, 		
+			{
+				sentiments: [
+					Left('joke'),
+				]
+			}
+		)
+	
+		assertEq(result, 'tina does not own construct "literal"')
+	})
+	
 	test('nesting', async () => {
 		const result = await runProgram(
 			{ world: DefaultWorld, inferenceEndpoint: '' },
 			`
-			socrates, why not? "if _ else _"
+			socrates, why not? "if else"
 				| tina, some joke. "<="
 					| kanye, compliment a. "100"    
 					| kanye, compliment b. "200"

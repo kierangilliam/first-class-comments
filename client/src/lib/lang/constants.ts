@@ -1,4 +1,4 @@
-import type { Citizen } from './types'
+import type { Citizen, ExpressionAST } from './types'
 import type { WorldState } from './world'
 
 
@@ -12,6 +12,13 @@ export const firstClassCitizens: Record<keyof typeof labelMap, Citizen> = {
 	question: 'socrates',
 	joke: 'tina',
 	compliment: 'kanye',
+}
+
+export const firstClassHandler: Record<Citizen, ExpressionAST['type']> = {
+	linus: 'math',
+	socrates: 'if',
+	tina: 'comparison',
+	kanye: 'literal',
 }
 
 const DefaultState: { type: 'idle' } = { type: 'idle' }

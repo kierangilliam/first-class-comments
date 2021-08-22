@@ -34,15 +34,25 @@ export const runProgram = async (
 }
 
 const handleManual = (input: string): string => {
-	switch (input) { 
-		case 'man ownership': 
+	const tokens = input.split(' ')
+	switch (tokens ? tokens[1] : '') { 
+		case 'ownership': 
 			return `kanye is literal (3 'text' true false)
 				linus operates (+ - / *)
 				tina compares (and or > < <= >=)
-				socrates decides (if _ else _)
+				socrates decides (if else)
 				`
+		case 'syntax':
+			return '<name>, <comment>, "<code>"'
+		case 'likes':
+			return `kanye likes compliments
+				linus likes to read hackernews headlines
+				socrates likes questions
+				tina likes a joke with a punchline`
 		default:
-			return `unknown manual: ${input}`
+			return `unknown manual: ${input}
+			try: ownership, likes, or syntax.
+			`
 	}
 }
 
@@ -55,6 +65,9 @@ const handlePoorResponse = (e: RespondError): string => {
 	switch (e.type) {
 		case 'api: unknown error':
 			return 'The sentiment inference engine had an unknown error. Try again soon.'
+		
+		case 'recipient is does not own':
+			return `${e.comment.to} does not own construct "${e.construct}"`
 
 		case 'client is unaware of sentiment': {
 			return `${e.comment.to} ` + choice([

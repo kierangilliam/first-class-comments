@@ -1,5 +1,5 @@
 import { Either, Left, Option, Right } from '$lib/trust';
-import { firstClassCitizens, labelMap } from './constants';
+import { firstClassCitizens, firstClassHandler, labelMap } from './constants';
 import type { Citizen, Comment, ExpressionAST, ProgramCtx, Sentiment } from './types';
 import type { WorldState } from './world';
 
@@ -19,6 +19,10 @@ export type RespondError = ({
 } | {
 	type: 'recipient is asleep'
 	to: Citizen
+} | {
+	type: 'recipient is does not own'
+	comment: Comment
+	construct: ExpressionAST['type']
 })
 
 // walks the ast to see how citizens respond to comments
@@ -28,15 +32,23 @@ export const respond = async (
 	ctx: ProgramCtx, ast: ExpressionAST, testSentiments?: Either<Sentiment, RespondError>[]
 ): Promise<Option<RespondError>> => {
 
-	const commentsQueue = getComments(ast)
+	const astQueue = flattenAST(ast)
 	
 	if (testSentiments) {
-		if (testSentiments.length !== commentsQueue.length) 
-			throw Error(`respond with test emotes :: ${testSentiments.length} !== ${commentsQueue.length}`)
+		if (testSentiments.length !== astQueue.length) 
+			throw Error(`respond with test emotes :: ${testSentiments.length} !== ${astQueue.length}`)
 	}
 
-	for (let i = 0; i < commentsQueue.length; i++) {
-		const comment = commentsQueue[i]
+	for (let i = 0; i < astQueue.length; i++) {
+		const { comment, type } = astQueue[i]
+
+		if (firstClassHandler[comment.to] !== type)
+			return Option.Some({
+				type: 'recipient is does not own',
+				comment,
+				construct: type,
+			})
+
 		const sentiment = testSentiments 
 			// ugly way to monkey patch for testing (see emote.test.ts)
 			? testSentiments[i]
@@ -102,23 +114,23 @@ const getSentiment = async (inferenceEndpoint: string, comment: Comment): Promis
 	return Right({ type: 'client is unaware of sentiment', comment, sentiment })
 }
 
-const getComments = (ast: ExpressionAST): Comment[] => {
+const flattenAST = (ast: ExpressionAST): ExpressionAST[] => {
 	switch (ast.type) {
 		case 'if':
 			return [
-				ast.comment,
-				...getComments(ast.condition), 
-				...getComments(ast.consequence), 
-				...getComments(ast.alternative),
+				ast,
+				...flattenAST(ast.condition), 
+				...flattenAST(ast.consequence), 
+				...flattenAST(ast.alternative),
 			]
 		case 'literal':
-			return [ast.comment]
+			return [ast]
 		case 'math':
 		case 'comparison':
 			return [
-				ast.comment, 
-				...getComments(ast.left),
-				...getComments(ast.right),
+				ast, 
+				...flattenAST(ast.left),
+				...flattenAST(ast.right),
 			]
 		default: {
 			// `ast.type is never`
