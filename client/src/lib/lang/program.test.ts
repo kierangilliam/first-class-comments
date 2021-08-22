@@ -99,12 +99,7 @@ describe('math', () => {
 
 // TODO
 /**
-done
-Sleeping citizens
-deploy
-
 Now:
-MathOperator
 plane with windows and names in windows
 plane on change do update for 1sec
 Terminal as computer

@@ -28,6 +28,7 @@
 
 <section>
 	<h1>yeet</h1>
+	<p>use control-enter to submit terminal</p>
 </section>
 
 <Terminal on:input={setInput} {program} />

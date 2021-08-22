@@ -17,22 +17,31 @@ export const clickOutside = (node: HTMLElement, handler: () => any): any => {
 	}
 }
 
-export const blink = (node: HTMLElement, opts: { interval: number, blinking: Readable<boolean> }): void => {
+// TODO delete?
+export const blink = (node: HTMLElement, opts: { interval: number, blinking?: Readable<boolean> }): void => {
 	const show = () => node.style.opacity = '1'
 	const hide = () => node.style.opacity = '0'
 
 	let timer = null
 
-	opts.blinking.subscribe($blink => {
-		if (!$blink && timer) {
-			clearInterval(timer)
-			node.style.opacity = '1'
-			return
-		}
-
+	const startTimer = () => {
 		timer = setInterval(() => {
 			show()
 			setTimeout(hide, opts.interval / 2)
 		}, opts.interval)
-	})
+	}
+
+	if (opts.blinking != null) {
+		opts.blinking.subscribe($blink => {
+			if (!$blink && timer) {
+				clearInterval(timer)
+				node.style.opacity = '1'
+				return
+			}
+
+			startTimer()
+		})
+	} else {
+		startTimer()
+	}
 }

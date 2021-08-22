@@ -3,19 +3,18 @@
 	import { writable } from 'svelte/store'
 	import type { Readable } from 'svelte/store'
 	import type { ProgramState } from '$lib/lang'
-	import { blink, clickOutside } from '$lib/actions'
+	import { clickOutside } from '$lib/actions'
 
 	export let program: Readable<ProgramState>
 
 	const dispatch = createEventDispatcher()
-	const INPUT_PADDING = 18
 	const focused = writable(true)	
 
 	let terminalInput: string = ''
 	let historyOffset = 0
+	let controlKeyPressed: boolean = false
 
-	let inputElement: HTMLInputElement
-	let inputSizeElement: HTMLInputElement
+	let inputElement: HTMLTextAreaElement
 
 	focused.subscribe($focused => {
 		if ($focused && inputElement) {
@@ -25,15 +24,19 @@
 
 	const onInput = ({ resetHistory=false }) => (_?) => {
 		if (resetHistory) historyOffset = 0
-
-		if (inputElement) {
-			inputSizeElement.innerHTML = terminalInput
-			inputElement.style.width = inputSizeElement.offsetWidth + INPUT_PADDING + 'px' 
-		}
 	}
 
 	const onTerminalClick = () => {
 		$focused = true
+	}
+
+	const onTerminalKeyDown = (e: KeyboardEvent) => {
+		switch (e.key) {
+			case 'Control':
+				controlKeyPressed = true
+		}
+
+		console.log({ metaKeyPressed: controlKeyPressed })
 	}
 
 	const onTerminalKeyUp = (e: KeyboardEvent) => {
@@ -47,6 +50,10 @@
 		}
 
 		switch (e.key) {
+			case 'Control': {
+				controlKeyPressed = false
+				break
+			}				
 			case 'ArrowUp': {
 				historyOffset = Math.min($program.history.length, historyOffset + 1)
 				onArrowUpDown()
@@ -58,9 +65,11 @@
 				break;
 			}
 			case 'Enter': {
-				dispatch('input', terminalInput)
-				terminalInput = ''
-				break;
+				if (controlKeyPressed) {
+					dispatch('input', terminalInput)
+					terminalInput = ''
+					break;
+				}
 			}
 		}		
 	}
@@ -73,29 +82,34 @@
 <div 
 	class='terminal' 
 	on:click={onTerminalClick} 
+	on:keydown={onTerminalKeyDown}
 	on:keyup={onTerminalKeyUp}
 	use:clickOutside={onClickOutside}
 >
 	{#each $program.history as { input, output } }
-		<p>> {input}</p>
+		<p>$ {input}</p>
 		<p>{output}</p>
 	{/each}
 
 	{#if $program.working}
-		<p>...</p>
+		<span>...</span>
 	{:else}
 		<div class='terminal-input'>
-			<span>></span>
-			<!-- used to calc the size of the input field -->
-			<span bind:this={inputSizeElement} class='hidden'></span>
-			<input 
-				bind:this={inputElement} 
-				bind:value={terminalInput} 
-				on:input={onInput({ resetHistory: true })}
-				autofocus
-				type='text'
-			>
-			<span class='cursor' use:blink={{ interval: 1000, blinking: focused }}>❚</span>
+			<span class='cursor'>$</span>
+			<div>
+				<!-- TODO grow rows with input
+				https://css-tricks.com/the-cleanest-trick-for-autogrowing-textareas/
+				-->
+				<textarea 
+					bind:this={inputElement} 
+					data-gramm_editor="false"
+					bind:value={terminalInput} 
+					on:input={onInput({ resetHistory: true })}
+					autofocus
+					rows="3"
+					cols="50"
+				></textarea>
+			</div>
 		</div>
 	{/if}	
 </div>
@@ -118,17 +132,15 @@
 		width: 100%;
 	}
 
-	.hidden { 
-		position: absolute;
-        left: -9999px;
-        display: inline-block;
-        min-width: 2em;
+	.cursor { 
+		margin-right: var(--s-2);
 	}
 
-	input {
-		background: var(--black);
+	textarea {
+		background: var(--darkerGray);
 		color: var(--white);
 		outline: 0;
-		width: 2em;
+		border: 0;
+		width: 100%;
 	}
 </style>
