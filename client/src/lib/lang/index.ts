@@ -2,15 +2,20 @@ import type { Readable } from 'svelte/store'
 import { get, writable } from 'svelte/store'
 import { DefaultWorld } from './constants'
 import { runProgram } from './program'
-import type { ProgramState } from './types'
+import type { ProgramCtx, ProgramState } from './types'
 import { updateWorld } from './world'
 
 export type { Comment, ProgramState } from './types'
 
 // parse comment, maybe emote, loop
-export const startProgram = (input: Readable<string>): Readable<ProgramState> => {
+export const startProgram = (
+	input: Readable<string>, ctx: Pick<ProgramCtx, 'inferenceEndpoint'>
+): Readable<ProgramState> => {
 	const store = writable<ProgramState>({ 
-		world: DefaultWorld, working: false, evaluation: '', history: [],
+		world: DefaultWorld, 
+		working: false, 
+		evaluation: '', 
+		history: [],
 	})	
 
 	// Update the world state
@@ -32,7 +37,7 @@ export const startProgram = (input: Readable<string>): Readable<ProgramState> =>
 					}
 				]
 		}))
-	}, 5_000)
+	}, 60_000)
 
 	input.subscribe(async $input => {
 		if (!$input || get(store).working) return
@@ -46,7 +51,7 @@ export const startProgram = (input: Readable<string>): Readable<ProgramState> =>
 
 		store.update(store => ({ ...store, working: true }))
 
-		done(await runProgram($input, get(store).world))	
+		done(await runProgram({ ...ctx, world: get(store).world }, $input))	
 	})
 
 	return store

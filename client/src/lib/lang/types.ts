@@ -15,6 +15,11 @@ export type Emotion = ({
 
 export type Citizen = 'linus' | 'socrates' | 'tina' | 'maria' | 'reginald' | 'kanye'
 
+export type ProgramCtx = {
+	world: WorldState
+	inferenceEndpoint: string
+}
+
 export type ProgramState = { 
 	world: WorldState,
 	working: boolean, 

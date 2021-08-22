@@ -1,6 +1,6 @@
 import { Either, Left, Option, Right } from '$lib/trust';
-import { API, firstClassCitizens, labelMap } from './constants';
-import type { Citizen, Comment, ExpressionAST, Sentiment } from './types';
+import { firstClassCitizens, labelMap } from './constants';
+import type { Citizen, Comment, ExpressionAST, ProgramCtx, Sentiment } from './types';
 import type { WorldState } from './world';
 
 export type RespondError = ({
@@ -25,7 +25,7 @@ export type RespondError = ({
 // if they all respond okay, return None (yeah thats confusing, should fix)
 // else, return reason 
 export const respond = async (
-	world: WorldState, ast: ExpressionAST, testSentiments?: Either<Sentiment, RespondError>[]
+	ctx: ProgramCtx, ast: ExpressionAST, testSentiments?: Either<Sentiment, RespondError>[]
 ): Promise<Option<RespondError>> => {
 
 	const commentsQueue = getComments(ast)
@@ -40,12 +40,12 @@ export const respond = async (
 		const sentiment = testSentiments 
 			// ugly way to monkey patch for testing (see emote.test.ts)
 			? testSentiments[i]
-			: (await getSentiment(comment))
+			: (await getSentiment(ctx.inferenceEndpoint, comment))
 		
 		if (sentiment.isRight) 
 			return Option.Some(sentiment.right)
 
-		const response = recipientResponse(world, sentiment.left, comment.to)
+		const response = recipientResponse(ctx.world, sentiment.left, comment.to)
 		
 		if (response.isRight)
 			return Option.Some(response.right)
@@ -65,11 +65,11 @@ export const respond = async (
 
 // calls api to get the label for comment
 // fixme: sentiment may not be the best word to describe this
-const getSentiment = async (comment: Comment): Promise<Either<Sentiment, RespondError>> => {
+const getSentiment = async (inferenceEndpoint: string, comment: Comment): Promise<Either<Sentiment, RespondError>> => {
 	let res: Response
 
 	try {
-		res = await fetch(`${API}/inference`, { 
+		res = await fetch(inferenceEndpoint, { 
 			method: 'post',
 			body: JSON.stringify({ comment: comment.comment }),
 		})
@@ -79,6 +79,8 @@ const getSentiment = async (comment: Comment): Promise<Either<Sentiment, Respond
 	}
 
 	const sentiment = await res.text()
+
+	console.log({ sentiment })
 
 	if (res.status !== 200) {
 		if (sentiment.includes('HuggingFace.loading.')) {

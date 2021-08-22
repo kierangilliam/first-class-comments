@@ -4,8 +4,13 @@ import { respond } from './respond'
 import { assertEq, com, lit } from './test-utilts'
 
 describe('if _ else _', () => {
+	const defaultCtx = {
+		inferenceEndpoint: '',
+		world: DefaultWorld,
+	}
+
 	test('a okay', async () => {
-		const result = await respond(DefaultWorld, {
+		const result = await respond(defaultCtx, {
 			type: 'if',
 			comment: com('socrates', 'why not?'),
 			condition: lit('true', com('kanye', 'you are beautiful.')),
@@ -27,7 +32,7 @@ describe('if _ else _', () => {
 		const c1 = com('kanye', 'you are beautiful.')
 		const c2 = com('kanye', 'everyone loves you.')
 
-		const result = await respond(DefaultWorld, {
+		const result = await respond(defaultCtx, {
 			type: 'if',
 			comment: com('socrates', 'why not?'),
 			condition: lit('true', c1),
